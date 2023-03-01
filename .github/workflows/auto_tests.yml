@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+  
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          auto-activate-base: false
+          activate-environment: test
+          python-version: ${{ matrix.python-version }}
+          environment-file: env.yml
+          
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+          conda info -a
+          pytest -sv --cov=. test.py
