@@ -39,3 +39,14 @@ def DecisionTreeRegressor_Algorithm(X_train, y_train,  X_train_labels, max_depth
     regressor.fit(df_X_train, y_train)
 
     return regressor
+
+# Function that predict y with given x input and model
+def PredictFromRegressor(model, X, X_labels):
+
+    # Check if Input Data correspond to model parameters, i.e features numbers, order
+    if all(feature in model.feature_names_in_ for feature in X_labels):
+        return model.predict(X)
+    else:
+        df_X_predict = pd.DataFrame(X, columns = X_labels)
+        df_X_predict = df_X_predict[model.feature_names_in_]
+        return model.predict(df_X_predict)

@@ -3,7 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
 from data_preparator import prepare
-from algorithm import LinearRegression_Algorithm, DecisionTreeRegressor_Algorithm
+from algorithm import LinearRegression_Algorithm, DecisionTreeRegressor_Algorithm, PredictFromRegressor
 
 
 def rand_data():
@@ -62,3 +62,15 @@ def test_DecisionTreeRegressor_Algorithm():
     max_depth = 2
     model = DecisionTreeRegressor_Algorithm(X_train, y_train, X_train_labels, max_depth)
     assert isinstance(model, DecisionTreeRegressor)
+
+def test_PredictFromRegressor():
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ['feature1', 'feature2']
+    model = LinearRegression_Algorithm(X_train, y_train, X_train_labels)
+    
+    X = np.array([[1, 2], [3, 4], [5, 6]])
+    X_labels = ['feature1', 'feature2']
+    y_predicted = PredictFromRegressor(model, X, X_labels)
+    assert isinstance(y_predicted, np.ndarray)
+    assert y_predicted.shape == (len(X),)
