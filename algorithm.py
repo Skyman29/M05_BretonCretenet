@@ -50,3 +50,32 @@ def PredictFromRegressor(model, X, X_labels):
         df_X_predict = pd.DataFrame(X, columns = X_labels)
         df_X_predict = df_X_predict[model.feature_names_in_]
         return model.predict(df_X_predict)
+    
+def LassoRegression_FeatureSelection(X_train, y_train, X_train_labels):
+
+    # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
+    # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
+    # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
+    # assert len(X_train) == len(X_train_labels)  # Check if data input have the same amount of samples
+    
+    #Cannot apply cv on low amount of sample, just return input as output
+    if(len(X_train)>50):
+        cv = 5
+    else:
+        return X_train, X_train_labels
+
+    cv = GridSearchCV(Lasso(),
+                      {'model__alpha':np.arange(0.1,10,0.1)},
+                      cv = cv, 
+                      scoring="neg_mean_absolute_error",
+                      verbose=3
+                      )
+    
+    cv.fit(X_train, y_train)
+
+    # print(cv.best_params_)
+    coefficients = cv.best_estimator_.named_steps['model'].coef_
+    X_train_labels_selected = np.array(X_train_labels)[np.abs(coefficients) > 0]
+    X_train_selected = np.array(X_train)[np.abs(coefficients) > 0]
+
+    return X_train_selected, X_train_labels_selected
