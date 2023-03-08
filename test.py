@@ -3,7 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
 from data_preparator import prepare
-from algorithm import LinearRegression_Algorithm, DecisionTreeRegressor_Algorithm, PredictFromRegressor
+from algorithm import LinearRegression_Algorithm, DecisionTreeRegressor_Algorithm, PredictFromRegressor, LassoRegression_FeatureSelection
 
 
 def rand_data():
