@@ -1,5 +1,8 @@
 import numpy as np
+from sklearn.linear_model import LinearRegression
+
 from data_preparator import prepare
+from algorithm import LinearRegression_Algorithm
 
 
 def rand_data():
@@ -43,3 +46,10 @@ def test_preparator_xy_alignement():
         assert (X_train[i, :] == X[y == y_train[i], :]).all()
     for i in range(len(y_test)):
         assert (X_test[i, :] == X[y == y_test[i], :]).all()
+
+def test_LinearRegression_Algorithm():
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ['feature1', 'feature2']
+    model = LinearRegression_Algorithm(X_train, y_train, X_train_labels)
+    assert isinstance(model, LinearRegression)
