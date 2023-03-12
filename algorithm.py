@@ -11,7 +11,7 @@ from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.tree import DecisionTreeRegressor
 
 # Funtion that call linear regressor method and return it fitted to the data
-def LinearRegression_Algorithm(X_train, y_train,  X_train_labels):
+def linear_regression_algorithm(X_train, y_train,  X_train_labels):
 
     # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
@@ -26,7 +26,7 @@ def LinearRegression_Algorithm(X_train, y_train,  X_train_labels):
     return regressor
 
 # Funtion that call Decision Tree regressor method and return it fitted to the data
-def DecisionTreeRegressor_Algorithm(X_train, y_train,  X_train_labels, max_depth = 2):
+def decision_tree_regressor_algorithm(X_train, y_train,  X_train_labels, max_depth = 2):
 
     # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
@@ -41,7 +41,7 @@ def DecisionTreeRegressor_Algorithm(X_train, y_train,  X_train_labels, max_depth
     return regressor
 
 # Function that predict y with given x input and model
-def PredictFromRegressor(model, X, X_labels):
+def predict_from_regressor(model, X, X_labels):
 
     # Check if Input Data correspond to model parameters, i.e features numbers, order
     if all(feature in model.feature_names_in_ for feature in X_labels):
@@ -51,7 +51,7 @@ def PredictFromRegressor(model, X, X_labels):
         df_X_predict = df_X_predict[model.feature_names_in_]
         return model.predict(df_X_predict)
     
-def LassoRegression_FeatureSelection(X_train, y_train, X_train_labels):
+def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
 
     # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)

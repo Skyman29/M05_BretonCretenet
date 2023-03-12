@@ -3,7 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
 from data_preparator import prepare
-from algorithm import LinearRegression_Algorithm, DecisionTreeRegressor_Algorithm, PredictFromRegressor, LassoRegression_FeatureSelection
+from algorithm import test_linear_regression_algorithm, decision_tree_regressor_algorithm, predict_from_regressor, lasso_regression_feature_selection
 
 
 def rand_data():
@@ -48,22 +48,22 @@ def test_preparator_xy_alignement():
     for i in range(len(y_test)):
         assert (X_test[i, :] == X[y == y_test[i], :]).all()
 
-def test_LinearRegression_Algorithm():
+def test_linear_regression_algorithm():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
     model = LinearRegression_Algorithm(X_train, y_train, X_train_labels)
     assert isinstance(model, LinearRegression)
 
-def test_DecisionTreeRegressor_Algorithm():
+def test_decision_tree_regressor_algorithm():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
     max_depth = 2
-    model = DecisionTreeRegressor_Algorithm(X_train, y_train, X_train_labels, max_depth)
+    model = decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth)
     assert isinstance(model, DecisionTreeRegressor)
 
-def test_PredictFromRegressor():
+def test_predict_from_regressor():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
@@ -71,14 +71,14 @@ def test_PredictFromRegressor():
     
     X = np.array([[1, 2], [3, 4], [5, 6]])
     X_labels = ['feature1', 'feature2']
-    y_predicted = PredictFromRegressor(model, X, X_labels)
+    y_predicted = predict_from_regressor(model, X, X_labels)
     assert isinstance(y_predicted, np.ndarray)
     assert y_predicted.shape == (len(X),)
 
-def test_LassoRegression_FeatureSelection():
+def test_lasso_regression_feature_selection():
     X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2', 'feature3']
-    X_train_selected, X_train_labels_selected = LassoRegression_FeatureSelection(X_train, y_train, X_train_labels)
+    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(X_train, y_train, X_train_labels)
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
