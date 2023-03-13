@@ -3,7 +3,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
 from data_preparator import prepare
-from algorithm import test_linear_regression_algorithm, decision_tree_regressor_algorithm, predict_from_regressor, lasso_regression_feature_selection
+from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, predict_from_regressor, lasso_regression_feature_selection
 
 
 def rand_data():
@@ -52,7 +52,7 @@ def test_linear_regression_algorithm():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
-    model = LinearRegression_Algorithm(X_train, y_train, X_train_labels)
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
     assert isinstance(model, LinearRegression)
 
 def test_decision_tree_regressor_algorithm():
@@ -67,7 +67,7 @@ def test_predict_from_regressor():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
-    model = LinearRegression_Algorithm(X_train, y_train, X_train_labels)
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
     
     X = np.array([[1, 2], [3, 4], [5, 6]])
     X_labels = ['feature1', 'feature2']
