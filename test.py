@@ -49,6 +49,18 @@ def test_preparator_xy_alignement():
         assert (X_test[i, :] == X[y == y_test[i], :]).all()
 
 def test_linear_regression_algorithm():
+    """
+    Test function to ensure that the linear_regression_algorithm function returns an instance of the LinearRegression
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
@@ -56,6 +68,18 @@ def test_linear_regression_algorithm():
     assert isinstance(model, LinearRegression)
 
 def test_decision_tree_regressor_algorithm():
+    """
+    Test function to ensure that the decision_tree_regressor_algorithm function returns an instance of the DecisionTreeRegressor
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
@@ -64,6 +88,18 @@ def test_decision_tree_regressor_algorithm():
     assert isinstance(model, DecisionTreeRegressor)
 
 def test_predict_from_regressor():
+    """
+    Test function to ensure that the predict_from_regressor function returns an array of predictions with the same
+    length as the input array.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2']
@@ -76,6 +112,17 @@ def test_predict_from_regressor():
     assert y_predicted.shape == (len(X),)
 
 def test_lasso_regression_feature_selection():
+    """
+    Test the `lasso_regression_feature_selection` function.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ['feature1', 'feature2', 'feature3']
