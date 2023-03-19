@@ -9,6 +9,7 @@ from sklearn.model_selection import GridSearchCV
 
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
 
 
 def linear_regression_algorithm(X_train, y_train, X_train_labels):
@@ -156,3 +157,28 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
     X_train_selected = np.array(X_train)[np.abs(coefficients) > 0]
 
     return X_train_selected, X_train_labels_selected
+
+
+def score(y_true, y_predict):
+    """Calculate the mean absolute error (MAE) between true and predicted values.
+
+    Parameters
+    ----------
+    y_true : np.ndarray
+        Correct target values.
+    y_predict : np.ndarray
+        Estimated target values.
+
+    Returns
+    -------
+    float
+        Mean absolute error between `y_true` and `y_predict`.
+
+    Examples
+    --------
+    >>> y_true = np.array([3, -0.5, 2, 7])
+    >>> y_predict = np.array([2.5, 0.0, 2, 8])
+    >>> score(y_true, y_predict)
+    0.5
+    """
+    return mean_absolute_error(y_true, y_predict)

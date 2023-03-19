@@ -8,6 +8,7 @@ from algorithm import (
     decision_tree_regressor_algorithm,
     predict_from_regressor,
     lasso_regression_feature_selection,
+    score,
 )
 
 
@@ -142,3 +143,23 @@ def test_lasso_regression_feature_selection():
     )
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
+
+
+def test_score():
+    """
+    Test the `score` function.
+    Check that function returns a float, and the correct value i.e 0.5
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    y_true = np.array([3, -0.5, 2, 7])
+    y_predict = np.array([2.5, 0.0, 2, 8])
+    test_score = score(y_true, y_predict)
+    assert isinstance(test_score, float)
+    assert test_score == 0.5
