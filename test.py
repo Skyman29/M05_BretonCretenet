@@ -3,13 +3,18 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
 from data_preparator import prepare
-from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, predict_from_regressor, lasso_regression_feature_selection
+from algorithm import (
+    linear_regression_algorithm,
+    decision_tree_regressor_algorithm,
+    predict_from_regressor,
+    lasso_regression_feature_selection,
+)
 
 
 def rand_data():
-    X = np.random.rand(10,5)
-    y = np.random.rand(10,1)
-    return np.concatenate([X,y], axis = 1)
+    X = np.random.rand(10, 5)
+    y = np.random.rand(10, 1)
+    return np.concatenate([X, y], axis=1)
 
 
 def test_preparator_is_random_if_no_seed():
@@ -48,6 +53,7 @@ def test_preparator_xy_alignement():
     for i in range(len(y_test)):
         assert (X_test[i, :] == X[y == y_test[i], :]).all()
 
+
 def test_linear_regression_algorithm():
     """
     Test function to ensure that the linear_regression_algorithm function returns an instance of the LinearRegression
@@ -63,9 +69,10 @@ def test_linear_regression_algorithm():
     """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
-    X_train_labels = ['feature1', 'feature2']
+    X_train_labels = ["feature1", "feature2"]
     model = linear_regression_algorithm(X_train, y_train, X_train_labels)
     assert isinstance(model, LinearRegression)
+
 
 def test_decision_tree_regressor_algorithm():
     """
@@ -82,10 +89,13 @@ def test_decision_tree_regressor_algorithm():
     """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
-    X_train_labels = ['feature1', 'feature2']
+    X_train_labels = ["feature1", "feature2"]
     max_depth = 2
-    model = decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth)
+    model = decision_tree_regressor_algorithm(
+        X_train, y_train, X_train_labels, max_depth
+    )
     assert isinstance(model, DecisionTreeRegressor)
+
 
 def test_predict_from_regressor():
     """
@@ -102,14 +112,15 @@ def test_predict_from_regressor():
     """
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
-    X_train_labels = ['feature1', 'feature2']
+    X_train_labels = ["feature1", "feature2"]
     model = linear_regression_algorithm(X_train, y_train, X_train_labels)
-    
+
     X = np.array([[1, 2], [3, 4], [5, 6]])
-    X_labels = ['feature1', 'feature2']
+    X_labels = ["feature1", "feature2"]
     y_predicted = predict_from_regressor(model, X, X_labels)
     assert isinstance(y_predicted, np.ndarray)
     assert y_predicted.shape == (len(X),)
+
 
 def test_lasso_regression_feature_selection():
     """
@@ -125,7 +136,9 @@ def test_lasso_regression_feature_selection():
     """
     X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
     y_train = np.array([10, 20, 30])
-    X_train_labels = ['feature1', 'feature2', 'feature3']
-    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(X_train, y_train, X_train_labels)
+    X_train_labels = ["feature1", "feature2", "feature3"]
+    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(
+        X_train, y_train, X_train_labels
+    )
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
