@@ -8,3 +8,6 @@ __pycache__/
 
 # ignore ALL files in ANY directory named .pytest_cache
 .pytest_cache/
+
+# ignore ALL files in ANY directory env
+env/
