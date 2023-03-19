@@ -4,12 +4,10 @@
 
 import numpy as np
 import pandas as pd
-
-from sklearn.model_selection import GridSearchCV
-
-from sklearn.linear_model import LinearRegression, Lasso
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import Lasso, LinearRegression
 from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeRegressor
 
 
 def linear_regression_algorithm(X_train, y_train, X_train_labels):

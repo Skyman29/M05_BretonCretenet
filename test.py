@@ -2,14 +2,14 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
-from data_preparator import prepare
 from algorithm import (
-    linear_regression_algorithm,
     decision_tree_regressor_algorithm,
-    predict_from_regressor,
     lasso_regression_feature_selection,
+    linear_regression_algorithm,
+    predict_from_regressor,
     score,
 )
+from data_preparator import prepare
 
 
 def rand_data():
