@@ -1,11 +1,21 @@
 import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+
+from algorithm import (
+    decision_tree_regressor_algorithm,
+    lasso_regression_feature_selection,
+    linear_regression_algorithm,
+    predict_from_regressor,
+    score,
+)
 from data_preparator import prepare
 
 
 def rand_data():
-    X = np.random.rand(10,5)
-    y = np.random.rand(10,1)
-    return np.concatenate([X,y], axis = 1)
+    X = np.random.rand(10, 5)
+    y = np.random.rand(10, 1)
+    return np.concatenate([X, y], axis=1)
 
 
 def test_preparator_is_random_if_no_seed():
@@ -43,3 +53,113 @@ def test_preparator_xy_alignement():
         assert (X_train[i, :] == X[y == y_train[i], :]).all()
     for i in range(len(y_test)):
         assert (X_test[i, :] == X[y == y_test[i], :]).all()
+
+
+def test_linear_regression_algorithm():
+    """
+    Test function to ensure that the linear_regression_algorithm function returns an instance of the LinearRegression
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+    assert isinstance(model, LinearRegression)
+
+
+def test_decision_tree_regressor_algorithm():
+    """
+    Test function to ensure that the decision_tree_regressor_algorithm function returns an instance of the DecisionTreeRegressor
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    max_depth = 2
+    model = decision_tree_regressor_algorithm(
+        X_train, y_train, X_train_labels, max_depth
+    )
+    assert isinstance(model, DecisionTreeRegressor)
+
+
+def test_predict_from_regressor():
+    """
+    Test function to ensure that the predict_from_regressor function returns an array of predictions with the same
+    length as the input array.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+
+    X = np.array([[1, 2], [3, 4], [5, 6]])
+    X_labels = ["feature1", "feature2"]
+    y_predicted = predict_from_regressor(model, X, X_labels)
+    assert isinstance(y_predicted, np.ndarray)
+    assert y_predicted.shape == (len(X),)
+
+
+def test_lasso_regression_feature_selection():
+    """
+    Test the `lasso_regression_feature_selection` function.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2", "feature3"]
+    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(
+        X_train, y_train, X_train_labels
+    )
+    assert isinstance(X_train_selected, np.ndarray)
+    assert isinstance(X_train_labels_selected, list)
+
+
+def test_score():
+    """
+    Test the `score` function.
+    Check that function returns a float, and the correct value i.e 0.5
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    y_true = np.array([3, -0.5, 2, 7])
+    y_predict = np.array([2.5, 0.0, 2, 8])
+    test_score = score(y_true, y_predict)
+    assert isinstance(test_score, float)
+    assert test_score == 0.5
