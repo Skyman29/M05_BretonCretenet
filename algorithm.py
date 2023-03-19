@@ -136,7 +136,7 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
     # assert len(X_train) == len(X_train_labels)  # Check if data input have the same amount of samples
 
     # Cannot apply cv on low amount of sample, just return input as output
-    if len(X_train) > 50:
+    if len(X_train) > 500:
         cv = 5
     else:
         return X_train, X_train_labels
