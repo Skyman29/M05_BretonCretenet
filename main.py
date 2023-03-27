@@ -109,7 +109,6 @@ def parse_file(filepath):
 
 # Pre processor
 def get_data_label(filepath):
-    import re
     # Open the file for reading
     with open('file.names', 'r') as f:
 
