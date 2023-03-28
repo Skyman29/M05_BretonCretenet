@@ -47,16 +47,6 @@ def main():
                 "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
             ],
         ],
-        "white+red": [
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ],
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ],
-        ],
     }
 
     # Define CLI arguments
@@ -203,8 +193,6 @@ def main():
 
     df_print = pd.DataFrame(models)
     print(tabulate(df_print, tablefmt="fancy_grid"))
-
-    # ... do something with the dataset ...
 
 
 if __name__ == "__main__":

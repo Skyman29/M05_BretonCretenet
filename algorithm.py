@@ -166,7 +166,6 @@ def lasso_regression_feature_selection(
 
     # print(cv.best_params_)
     coefficients = cv.best_estimator_.coef_
-    print(coefficients)
     X_train_labels_selected = np.array(X_train_labels)[np.abs(coefficients) > 0]
     X_train_selected = df_X_train[X_train_labels_selected]
     X_test_selected = df_X_test[X_train_labels_selected]
