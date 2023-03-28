@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeRegressor
 
 
-def linear_regression_algorithm(X_train, y_train, X_train_labels):
+def linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label):
     """
     Fit a linear regression model to the training data.
 
@@ -22,6 +22,8 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels):
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
+    y_train_label : str
+        string representing the feature name.
 
     Returns
     -------
@@ -33,16 +35,17 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels):
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
     # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
 
-    # Switching to DataFrame so X train labels are stored in model
+    # Switching to DataFrame so X train, y train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
+    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
 
     regressor = LinearRegression()
-    regressor.fit(df_X_train, y_train)
+    regressor.fit(df_X_train, df_y_train)
 
     return regressor
 
 
-def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth=2):
+def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth=2):
     """
     Fit a decision tree regression model to the training data.
 
@@ -54,6 +57,8 @@ def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_dept
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
+    y_train_label : str
+        string representing the feature name.
     max_depth : int, optional (default=2)
         The maximum depth of the decision tree.
 
@@ -69,11 +74,12 @@ def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_dept
 
     # Switching to DataFrame so X train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
+    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
 
     regressor = DecisionTreeRegressor(
         max_depth=max_depth, random_state=0
     )  # random_state = 0 to stick to the same random seed
-    regressor.fit(df_X_train, y_train)
+    regressor.fit(df_X_train, df_y_train)
 
     return regressor
 
@@ -98,15 +104,12 @@ def predict_from_regressor(model, X, X_labels):
     """
 
     # Check if Input Data correspond to model parameters, i.e features numbers, order
-    if all(feature in model.feature_names_in_ for feature in X_labels):
-        return model.predict(X)
-    else:
-        df_X_predict = pd.DataFrame(X, columns=X_labels)
-        df_X_predict = df_X_predict[model.feature_names_in_]
-        return model.predict(df_X_predict)
+    df_X_predict = pd.DataFrame(X, columns=X_labels)
+    df_X_predict = df_X_predict[model.feature_names_in_]
+    return model.predict(df_X_predict)
 
 
-def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
+def lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train_label, X_test):
     """
     Apply Lasso regression feature selection to the training data.
 
@@ -118,6 +121,10 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
+    y_train_label : str
+        string representing the feature name.
+    X_test : numpy.ndarray
+        Training input data of shape (n_samples, n_features).
 
     Returns
     -------
@@ -141,20 +148,26 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels):
 
     cv = GridSearchCV(
         Lasso(),
-        {"model__alpha": np.arange(0.1, 10, 0.1)},
+        {"alpha": [0.01, 0.1 ,1.0, 5.0, 10.0]},
         cv=cv,
         scoring="neg_mean_absolute_error",
         verbose=3,
     )
+    
+    df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
+    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
+    df_X_test = pd.DataFrame(X_test, columns=X_train_labels)
 
-    cv.fit(X_train, y_train)
+    cv.fit(df_X_train, df_y_train)
 
     # print(cv.best_params_)
-    coefficients = cv.best_estimator_.named_steps["model"].coef_
+    coefficients = cv.best_estimator_.coef_
+    print(coefficients)
     X_train_labels_selected = np.array(X_train_labels)[np.abs(coefficients) > 0]
-    X_train_selected = np.array(X_train)[np.abs(coefficients) > 0]
+    X_train_selected = df_X_train[X_train_labels_selected]
+    X_test_selected = df_X_train[X_train_labels_selected]
 
-    return X_train_selected, X_train_labels_selected
+    return X_train_selected.to_numpy(), X_train_labels_selected, X_test_selected
 
 
 def score(y_true, y_predict):

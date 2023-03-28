@@ -67,7 +67,7 @@ def load_data(input):
     """
     # check if input is URL or local path
     if input.endswith('.csv'):
-        return pd.read_csv(input, header=None).to_numpy()
+        return pd.read_csv(input, delimiter= ';').to_numpy()
     elif input.endswith('.data'):
         return pd.read_fwf(input, header=None).to_numpy()
     else:
@@ -131,27 +131,25 @@ def detect_column_names_from_file(file):
     column_names = []
 
     # Define a regular expression pattern to match column names
-    pattern = r'\d{1,2}[.]\s*([A-Z]+)\s*'
+    pattern = r'\d{1,2}\s*[.-]\s*([a-zA-Z]+)\s*'
 
     # Loop over each line in the file
     for b_line in file:
         str_line = b_line.decode('utf-8')
 
         # Check if the current line contains the start flag
-        if 'Attribute Information' in str_line:
+        if 'attribute information' in str_line.lower():
             start_flag = True
             continue
 
         # Check if the current line contains the end flag
-        if 'Missing Attribute Values' in str_line:
+        if 'missing attribute values' in str_line.lower():
             end_flag = True
             break
 
         # If the start flag is True and the end flag is False, append the line to the list
         if start_flag and not end_flag:
             match = re.search(pattern, str_line)
-            print('match : ', match, ' line : ',str_line, 'first char : ', str_line[0])
             if match:
-                print(match.group(1))
                 column_names.append(match.group(1))
     return column_names

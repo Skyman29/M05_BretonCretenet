@@ -1,12 +1,11 @@
 import argparse
 import numpy as np
-import urllib.request
 import os
 import pandas as pd
-import re
 from data_preparator import prepare, load_data, get_data_column_names
-from data_preprocessor import preprocess
+from data_preprocessor import preprocess, preprocess_polynomialfeatures
 from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, lasso_regression_feature_selection, predict_from_regressor, score
+from tabulate import tabulate
 
 def main():
     # Define available datasets
@@ -107,40 +106,42 @@ def main():
         temp_data = load_data(dataset[0])
         # Concatenate the new data with the existing data
         data = np.concatenate((data, temp_data))
-        
     data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
+    y_train_label = data_label[-1]
     
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
     #Polynomial
     # X_train = pd.DataFrame(X_train, columns = X_train_labels)
-    X_train, X_test = preprocess(X_train, X_test, method='poly', degree=args.degree)
+    X_test, _ = preprocess_polynomialfeatures(X_test, X_train_labels, degree=args.degree)
+    X_train, X_train_labels = preprocess_polynomialfeatures(X_train, X_train_labels, degree=args.degree)
+    
     #Scaling
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
 
     #Feature selection
     if args.feature_selection:
-        X_train, data_label = lasso_regression_feature_selection(X_train, y_train, X_train_labels)
+        X_train, X_train_labels, X_test = lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train_label, X_test)
 
     models = {}
     if args.algorithm == "linear":
-        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels)}
+        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)}
     elif args.algorithm == "tree":
-        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth = args.max_depth)}
+        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth = args.max_depth)}
     elif args.algorithm == "both":
-        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels)}
-        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth = args.max_depth)}
+        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)}
+        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth = args.max_depth)}
     
     for model_ref, model_data in models.items():
         y_predict_train = predict_from_regressor(model_data['model'],X_train, X_train_labels)
         y_predict_test = predict_from_regressor(model_data['model'],X_test, X_train_labels)
 
-        model_ref['score_train'] = score(y_train, y_predict_train)
-        model_ref['score_test'] = score(y_test, y_predict_test)
+        models[model_ref]['score_train'] = score(y_train, y_predict_train)
+        models[model_ref]['score_test'] = score(y_test, y_predict_test)
 
     df_print = pd.DataFrame(models)
-    print(df_print)
+    print(tabulate(df_print, tablefmt='fancy_grid'))
 
     # ... do something with the dataset ...
 
