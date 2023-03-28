@@ -143,8 +143,6 @@ def main():
     df_print = pd.DataFrame(models)
     print(df_print)
 
-    
-
     # ... do something with the dataset ...
 
 if __name__ == "__main__":
