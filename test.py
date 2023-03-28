@@ -9,7 +9,7 @@ from algorithm import (
     predict_from_regressor,
 )
 from data_preparator import prepare
-from data_preprocessor import preprocess
+from data_preprocessor import preprocess, preprocess_polynomialfeatures
 
 
 def rand_data():
@@ -297,7 +297,7 @@ def test_preprocessor_polynomial():
         ],
         axis=1,
     )
-    X_check, _ = preprocess(X, X, method="poly", degree=3)
+    X_check, _ = preprocess_polynomialfeatures(X, ["x1", "x2"], degree=3)
     assert np.allclose(X_check, X_poly, atol=1e-12)
 
 

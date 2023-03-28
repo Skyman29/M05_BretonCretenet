@@ -74,7 +74,7 @@ def preprocess_polynomialfeatures(data, data_column_names, degree=2):
             2. A list of the names of the columns in the expanded feature matrix.
     """
     df_data = pd.DataFrame(data, columns=data_column_names)
-    preprocessor = PolynomialFeatures(degree=degree, include_bias=False)
+    preprocessor = PolynomialFeatures(degree=degree, include_bias=True)
 
     df_data_expanded = preprocessor.fit_transform(df_data)
     data_column_names_expanded = preprocessor.get_feature_names_out(data_column_names)
