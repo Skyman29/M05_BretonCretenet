@@ -4,7 +4,7 @@ import urllib.request
 import os
 import pandas as pd
 import re
-from data_preparator import prepare
+from data_preparator import prepare, load_data, get_data_column_names
 from data_preprocessor import preprocess
 from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, lasso_regression_feature_selection, predict_from_regressor, score
 
@@ -103,12 +103,12 @@ def main():
     data = np.array([])
 
     for dataset in DATASETS[args.dataset]:
-        temp_data = parse_file(dataset[0])
+        temp_data = load_data(dataset[0])
         
         
         # Concatenate the new data with the existing data
         data = np.concatenate((temp_data, data), axis=0)
-    data_label = get_data_label(dataset[1])
+    data_label = get_data_column_names(dataset[1])
     X_train_labels = data_label[:-1]
     
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.rs)
@@ -144,147 +144,6 @@ def main():
     
 
     # ... do something with the dataset ...
-
-# Pre processor
-
-def load_data(input):
-    """
-    Load data from a file or URL into a NumPy array.
-
-    Parameters
-    ----------
-    input : str
-        The path to the file or the URL of the data to be loaded.
-
-    Returns
-    -------
-    data : ndarray
-        A NumPy array containing the loaded data.
-
-    Raises
-    ------
-    ValueError
-        If the input file does not exist.
-
-    Notes
-    -----
-    This function can load data from files that are either CSV (comma-separated values)
-    or text files with space-separated values. The function automatically detects the file
-    format based on the first line of the file.
-
-    If `input` is a URL, the function uses the `urllib` module to download the data.
-
-    If `input` is a file path, the function checks if the file exists using the `os` module.
-
-    The loaded data is returned as a NumPy array.
-
-    Examples
-    --------
-    >>> data = load_data('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data')
-    >>> data.shape
-    (150, 5)
-
-    >>> data = load_data('data.txt')
-    >>> data.shape
-    (10, 3)
-    """
-    # check if input is URL or local path
-    if input.startswith('http'):
-        with urllib.request.urlopen(input) as f:
-            first_line = f.readline()
-            if ';' in first_line:
-                # file is CSV
-                data = np.genfromtxt(input, delimiter=';', autostrip=True)
-            else:
-                # file is text with space-separated values
-                data = np.genfromtxt(input, delimiter=' ', autostrip=True)
-    else:
-        # check if file exists
-        if not os.path.isfile(input):
-            raise ValueError("File does not exist")
-        
-        # determine if file is CSV or text with space-separated values
-        with open(input, 'r') as f:
-            first_line = f.readline()
-            if ';' in first_line:
-                # file is CSV
-                data = np.genfromtxt(input, delimiter=';', autostrip=True)
-            else:
-                # file is text with space-separated values
-                data = np.genfromtxt(input, delimiter=' ', autostrip=True)
-    
-    return data
-
-
-
-# Pre processor
-def get_data_label(filepath):
-    """
-    Extracts the column names from a file containing attribute information for a dataset.
-
-    Parameters
-    ----------
-    filepath : str
-        The path to the file containing attribute information.
-
-    Returns
-    -------
-    list
-        A list of strings representing the column names extracted from the file.
-
-    Raises
-    ------
-    IOError
-        If the file does not exist or cannot be opened for reading.
-
-    Notes
-    -----
-    The function reads the file line by line and searches for a section labeled "Attribute Information",
-    which indicates the start of the section containing the column names. The function then extracts the
-    column names using a regular expression pattern that matches lines of the form "n - column_name",
-    where "n" is a positive integer representing the index of the column and "column_name" is the name
-    of the column.
-
-    The function stops extracting column names when it encounters a section labeled "Missing Attribute Values",
-    which indicates the end of the section containing the column names.
-    """
-
-    # Open the file for reading
-    with open('file.names', 'r') as f:
-
-        # Read the file line by line
-        lines = f.readlines()
-
-        # Initialize a flag to indicate when to start and stop appending lines
-        start_flag = False
-        end_flag = False
-
-        # Initialize an empty list to store the column names
-        column_names = []
-
-        # Define a regular expression pattern to match column names
-        pattern = r'^\d+\s*-\s*(.+)$'
-
-        # Loop over each line in the file
-        for line in lines:
-
-            # Check if the current line contains the start flag
-            if 'Attribute Information' in line:
-                start_flag = True
-                continue
-
-            # Check if the current line contains the end flag
-            if 'Missing Attribute Values' in line:
-                end_flag = True
-                break
-
-            # If the start flag is True and the end flag is False, append the line to the list
-            if start_flag and not end_flag:
-                match = re.match(pattern, line)
-                if match:
-                    column_names.append(match.group(1))
-        return column_names
-
 
 if __name__ == "__main__":
     main()
