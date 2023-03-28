@@ -1,42 +1,70 @@
 import argparse
-import numpy as np
 import os
+
+import numpy as np
 import pandas as pd
-from data_preparator import prepare, load_data, get_data_column_names
-from data_preprocessor import preprocess, preprocess_polynomialfeatures
-from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, lasso_regression_feature_selection, predict_from_regressor, score
 from tabulate import tabulate
+
+from algorithm import (
+    decision_tree_regressor_algorithm,
+    lasso_regression_feature_selection,
+    linear_regression_algorithm,
+    predict_from_regressor,
+    score,
+)
+from data_preparator import get_data_column_names, load_data, prepare
+from data_preprocessor import preprocess, preprocess_polynomialfeatures
+
 
 def main():
     # Define available datasets
     DATASETS = {
-        'housing': [['https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data', 
-                    'https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names']],
-        'white': [['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv', 
-                  'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names']],
-        'red': [['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv', 
-                'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names']],
-        'red+white': [
-            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv',
-             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
-            
-            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv',
-             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
+        "housing": [
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names",
+            ]
         ],
-        'white+red': [
-            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv',
-             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
-            
-            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv',
-             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
+        "white": [
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ]
+        ],
+        "red": [
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ]
+        ],
+        "red+white": [
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ],
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ],
+        ],
+        "white+red": [
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ],
+            [
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+            ],
         ],
     }
 
     # Define CLI arguments
     parser = argparse.ArgumentParser(
-                    prog='ProgramName',
-                    description='Python package to build machine learning model',
-                    epilog='')
+        prog="ProgramName",
+        description="Python package to build machine learning model",
+        epilog="",
+    )
     parser.add_argument(
         "-d",
         "--dataset",
@@ -58,10 +86,10 @@ def main():
     )
     parser.add_argument(
         "-deg",
-        "--degree", 
-        type=int, 
-        default=2, 
-        help="Degree for polynomial preprocessing."
+        "--degree",
+        type=int,
+        default=2,
+        help="Degree for polynomial preprocessing.",
     )
     parser.add_argument(
         "-p",
@@ -93,7 +121,6 @@ def main():
         default=2,
         help="Choose max depth for DecisionTreeRegressor()",
     )
-    
 
     # Parse the arguments
     args = parser.parse_args()
@@ -109,41 +136,76 @@ def main():
     data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
     y_train_label = data_label[-1]
-    
+
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
-    #Polynomial
+    # Polynomial
     # X_train = pd.DataFrame(X_train, columns = X_train_labels)
-    X_test, _ = preprocess_polynomialfeatures(X_test, X_train_labels, degree=args.degree)
-    X_train, X_train_labels = preprocess_polynomialfeatures(X_train, X_train_labels, degree=args.degree)
-    
-    #Scaling
+    X_test, _ = preprocess_polynomialfeatures(
+        X_test, X_train_labels, degree=args.degree
+    )
+    X_train, X_train_labels = preprocess_polynomialfeatures(
+        X_train, X_train_labels, degree=args.degree
+    )
+
+    # Scaling
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
 
-    #Feature selection
+    # Feature selection
     if args.feature_selection:
-        X_train, X_train_labels, X_test = lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train_label, X_test)
+        X_train, X_train_labels, X_test = lasso_regression_feature_selection(
+            X_train, y_train, X_train_labels, y_train_label, X_test
+        )
 
     models = {}
     if args.algorithm == "linear":
-        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)}
+        models["linear"] = {
+            "model": linear_regression_algorithm(
+                X_train, y_train, X_train_labels, y_train_label
+            )
+        }
     elif args.algorithm == "tree":
-        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth = args.max_depth)}
+        models["tree"] = {
+            "model": decision_tree_regressor_algorithm(
+                X_train,
+                y_train,
+                X_train_labels,
+                y_train_label,
+                max_depth=args.max_depth,
+            )
+        }
     elif args.algorithm == "both":
-        models["linear"] = {'model':linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)}
-        models["tree"] = {'model':decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth = args.max_depth)}
-    
-    for model_ref, model_data in models.items():
-        y_predict_train = predict_from_regressor(model_data['model'],X_train, X_train_labels)
-        y_predict_test = predict_from_regressor(model_data['model'],X_test, X_train_labels)
+        models["linear"] = {
+            "model": linear_regression_algorithm(
+                X_train, y_train, X_train_labels, y_train_label
+            )
+        }
+        models["tree"] = {
+            "model": decision_tree_regressor_algorithm(
+                X_train,
+                y_train,
+                X_train_labels,
+                y_train_label,
+                max_depth=args.max_depth,
+            )
+        }
 
-        models[model_ref]['score_train'] = score(y_train, y_predict_train)
-        models[model_ref]['score_test'] = score(y_test, y_predict_test)
+    for model_ref, model_data in models.items():
+        y_predict_train = predict_from_regressor(
+            model_data["model"], X_train, X_train_labels
+        )
+        y_predict_test = predict_from_regressor(
+            model_data["model"], X_test, X_train_labels
+        )
+
+        models[model_ref]["score_train"] = score(y_train, y_predict_train)
+        models[model_ref]["score_test"] = score(y_test, y_predict_test)
 
     df_print = pd.DataFrame(models)
-    print(tabulate(df_print, tablefmt='fancy_grid'))
+    print(tabulate(df_print, tablefmt="fancy_grid"))
 
     # ... do something with the dataset ...
+
 
 if __name__ == "__main__":
     main()

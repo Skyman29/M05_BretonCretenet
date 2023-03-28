@@ -45,7 +45,9 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)
     return regressor
 
 
-def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, y_train_label, max_depth=2):
+def decision_tree_regressor_algorithm(
+    X_train, y_train, X_train_labels, y_train_label, max_depth=2
+):
     """
     Fit a decision tree regression model to the training data.
 
@@ -109,7 +111,9 @@ def predict_from_regressor(model, X, X_labels):
     return model.predict(df_X_predict)
 
 
-def lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train_label, X_test):
+def lasso_regression_feature_selection(
+    X_train, y_train, X_train_labels, y_train_label, X_test
+):
     """
     Apply Lasso regression feature selection to the training data.
 
@@ -148,12 +152,12 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train
 
     cv = GridSearchCV(
         Lasso(),
-        {"alpha": [0.01, 0.1 ,1.0, 5.0, 10.0]},
+        {"alpha": [0.01, 0.1, 1.0, 5.0, 10.0]},
         cv=cv,
         scoring="neg_mean_absolute_error",
         verbose=3,
     )
-    
+
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
     df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
     df_X_test = pd.DataFrame(X_test, columns=X_train_labels)
@@ -165,7 +169,7 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels, y_train
     print(coefficients)
     X_train_labels_selected = np.array(X_train_labels)[np.abs(coefficients) > 0]
     X_train_selected = df_X_train[X_train_labels_selected]
-    X_test_selected = df_X_train[X_train_labels_selected]
+    X_test_selected = df_X_test[X_train_labels_selected]
 
     return X_train_selected.to_numpy(), X_train_labels_selected, X_test_selected
 

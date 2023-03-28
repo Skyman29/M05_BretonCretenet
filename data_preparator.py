@@ -1,9 +1,10 @@
-from sklearn.model_selection import train_test_split
+import os
 import re
 import urllib.request
-import os
+
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 
 def prepare(dataset, random_state=None, stratify=None):
@@ -28,7 +29,7 @@ def prepare(dataset, random_state=None, stratify=None):
     numpy.ndarray
         y_train, an array containing the labels of the training set.
     numpy.ndarray
-        y_test, an array containing the labels of the test set.    
+        y_test, an array containing the labels of the test set.
     """
     # Split the dataset between features X and labels y (y is the last column)
     X = dataset[:, :-1]
@@ -38,6 +39,7 @@ def prepare(dataset, random_state=None, stratify=None):
         X, y, test_size=0.5, random_state=random_state, stratify=stratify
     )
     return X_train, X_test, y_train, y_test
+
 
 def load_data(input):
     """
@@ -66,12 +68,13 @@ def load_data(input):
     assumed to be fixed-width. The header of the file is ignored.
     """
     # check if input is URL or local path
-    if input.endswith('.csv'):
-        return pd.read_csv(input, delimiter= ';').to_numpy()
-    elif input.endswith('.data'):
+    if input.endswith(".csv"):
+        return pd.read_csv(input, delimiter=";").to_numpy()
+    elif input.endswith(".data"):
         return pd.read_fwf(input, header=None).to_numpy()
     else:
         raise ValueError("File format not recognized")
+
 
 def get_data_column_names(input):
     """
@@ -99,26 +102,27 @@ def get_data_column_names(input):
     values. It then reads the file and returns the column names.
     """
     # check if input is URL or local path
-    if input.startswith('http'):
+    if input.startswith("http"):
         with urllib.request.urlopen(input) as file:
             return detect_column_names_from_file(file)
-            
+
     else:
         # check if file exists
         if not os.path.isfile(input):
             raise ValueError("File does not exist")
-        
+
         # determine if file is CSV or text with space-separated values
-        with open(input, 'r') as file:
+        with open(input, "r") as file:
             return detect_column_names_from_file(file)
-            
+
+
 def detect_column_names_from_file(file):
     """
     Given a file, this function reads the file line by line and detects the column names in it.
-    
+
     Args:
     - file: a file object, representing the file to be read.
-    
+
     Returns:
     - column_names: a list of strings, containing the column names detected in the file.
     """
@@ -131,19 +135,19 @@ def detect_column_names_from_file(file):
     column_names = []
 
     # Define a regular expression pattern to match column names
-    pattern = r'\d{1,2}\s*[.-]\s*([a-zA-Z]+)\s*'
+    pattern = r"\d{1,2}\s*[.-]\s*([a-zA-Z]+)\s*"
 
     # Loop over each line in the file
     for b_line in file:
-        str_line = b_line.decode('utf-8')
+        str_line = b_line.decode("utf-8")
 
         # Check if the current line contains the start flag
-        if 'attribute information' in str_line.lower():
+        if "attribute information" in str_line.lower():
             start_flag = True
             continue
 
         # Check if the current line contains the end flag
-        if 'missing attribute values' in str_line.lower():
+        if "missing attribute values" in str_line.lower():
             end_flag = True
             break
 
