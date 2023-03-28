@@ -8,7 +8,6 @@ from data_preparator import prepare, load_data, get_data_column_names
 from data_preprocessor import preprocess
 from algorithm import linear_regression_algorithm, decision_tree_regressor_algorithm, lasso_regression_feature_selection, predict_from_regressor, score
 
-
 def main():
     # Define available datasets
     DATASETS = {
@@ -35,7 +34,10 @@ def main():
     }
 
     # Define CLI arguments
-    parser = argparse.ArgumentParser(description="Prepare and preprocess a dataset.")
+    parser = argparse.ArgumentParser(
+                    prog='ProgramName',
+                    description='Python package to build machine learning model',
+                    epilog='')
     parser.add_argument(
         "-d",
         "--dataset",
@@ -52,7 +54,7 @@ def main():
         "-rs",
         "--random-state",
         type=int,
-        default=None,
+        default=42,
         help="Random state for train/test split.",
     )
     parser.add_argument(
@@ -72,7 +74,7 @@ def main():
     )
     parser.add_argument(
         "-fs",
-        "--feature-selection",
+        "--feature_selection",
         action="store_true",
         default=False,
         help="Whether to perform feature selection using Lasso regression.",
