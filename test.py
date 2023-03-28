@@ -1,5 +1,14 @@
 import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+
 from data_preparator import prepare
+from algorithm import (
+    linear_regression_algorithm,
+    decision_tree_regressor_algorithm,
+    predict_from_regressor,
+    lasso_regression_feature_selection,
+)
 from data_preprocessor import preprocess
 
 
@@ -16,9 +25,9 @@ def rand_data():
     numpy.ndarray
         An array of size (10, 6) with random features and labels
     """
-    X = np.random.rand(10,5)
-    y = np.random.rand(10,1)
-    return np.concatenate([X,y], axis = 1)
+    X = np.random.rand(10, 5)
+    y = np.random.rand(10, 1)
+    return np.concatenate([X, y], axis=1)
 
 
 def test_preparator_is_random_if_no_seed():
@@ -36,8 +45,12 @@ def test_preparator_is_random_if_no_seed():
     dataset = rand_data()
     X_train, X_test, y_train, y_test = prepare(dataset)
     # After preparation, data should not be in the exact same order as in the begining
-    assert not np.allclose(np.concatenate([X_train, X_test], axis=0), dataset[:, :-1], atol=1e-12)
-    assert not np.allclose(np.concatenate([y_train, y_test], axis=0), dataset[:, -1], atol=1e-12)
+    assert not np.allclose(
+        np.concatenate([X_train, X_test], axis=0), dataset[:, :-1], atol=1e-12
+    )
+    assert not np.allclose(
+        np.concatenate([y_train, y_test], axis=0), dataset[:, -1], atol=1e-12
+    )
     # Without seeds, two preparations should give different results
     X_train2, X_test2, y_train2, y_test2 = prepare(dataset)
     assert not np.allclose(X_train, X_train2, atol=1e-12)
@@ -88,7 +101,97 @@ def test_preparator_xy_alignement():
     for i in range(len(y_train)):
         assert np.allclose(X_train[i, :], X[y == y_train[i], :], atol=1e-12)
     for i in range(len(y_test)):
-        assert np.allclose(X_test[i, :], X[y == y_test[i], :], atol=1e-12)
+        assert (X_test[i, :] == X[y == y_test[i], :]).all()
+
+
+def test_linear_regression_algorithm():
+    """
+    Test function to ensure that the linear_regression_algorithm function returns an instance of the LinearRegression
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+    assert isinstance(model, LinearRegression)
+
+
+def test_decision_tree_regressor_algorithm():
+    """
+    Test function to ensure that the decision_tree_regressor_algorithm function returns an instance of the DecisionTreeRegressor
+    class.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    max_depth = 2
+    model = decision_tree_regressor_algorithm(
+        X_train, y_train, X_train_labels, max_depth
+    )
+    assert isinstance(model, DecisionTreeRegressor)
+
+
+def test_predict_from_regressor():
+    """
+    Test function to ensure that the predict_from_regressor function returns an array of predictions with the same
+    length as the input array.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
+    X_train = np.array([[1, 2], [3, 4], [5, 6]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2"]
+    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+
+    X = np.array([[1, 2], [3, 4], [5, 6]])
+    X_labels = ["feature1", "feature2"]
+    y_predicted = predict_from_regressor(model, X, X_labels)
+    assert isinstance(y_predicted, np.ndarray)
+    assert y_predicted.shape == (len(X),)
+
+
+def test_lasso_regression_feature_selection():
+    """
+    Test the `lasso_regression_feature_selection` function.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
+    X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
+    y_train = np.array([10, 20, 30])
+    X_train_labels = ["feature1", "feature2", "feature3"]
+    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(
+        X_train, y_train, X_train_labels
+    )
+    assert isinstance(X_train_selected, np.ndarray)
+    assert isinstance(X_train_labels_selected, list)
 
 
 def test_preprocessor_standard():
@@ -103,13 +206,13 @@ def test_preprocessor_standard():
     --------
     None
     """
-    X_train = np.random.rand(15,5)
-    X_test = np.random.rand(10,5)
+    X_train = np.random.rand(15, 5)
+    X_test = np.random.rand(10, 5)
     mean = np.mean(X_train, axis=0)
     std = np.std(X_train, axis=0)
-    X_train_standardized = (X_train-mean)/std
-    X_test_standardized = (X_test-mean)/std
-    X_train_check, X_test_check = preprocess(X_train, X_test, method='standardize')
+    X_train_standardized = (X_train - mean) / std
+    X_test_standardized = (X_test - mean) / std
+    X_train_check, X_test_check = preprocess(X_train, X_test, method="standardize")
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
     assert np.allclose(X_test_check, X_test_standardized, atol=1e-12)
 
@@ -126,13 +229,13 @@ def test_preprocessor_minmax():
     --------
     None
     """
-    X_train = np.random.rand(15,5)
-    X_test = np.random.rand(10,5)
+    X_train = np.random.rand(15, 5)
+    X_test = np.random.rand(10, 5)
     mininmum = np.min(X_train, axis=0)
     maximum = np.max(X_train, axis=0)
-    X_train_minmax = (X_train-mininmum)/(maximum-mininmum)
-    X_test_minmax = (X_test-mininmum)/(maximum-mininmum)
-    X_train_check, X_test_check = preprocess(X_train, X_test, method='minmax')
+    X_train_minmax = (X_train - mininmum) / (maximum - mininmum)
+    X_test_minmax = (X_test - mininmum) / (maximum - mininmum)
+    X_train_check, X_test_check = preprocess(X_train, X_test, method="minmax")
     assert np.allclose(X_train_check, X_train_minmax, atol=1e-12)
     assert np.allclose(X_test_check, X_test_minmax, atol=1e-12)
 
@@ -149,14 +252,16 @@ def test_preprocessor_robust():
     --------
     None
     """
-    X_train = np.random.rand(15,5)
-    X_test = np.random.rand(10,5)
+    X_train = np.random.rand(15, 5)
+    X_test = np.random.rand(10, 5)
     median = np.median(X_train, axis=0)
-    interquartile = np.percentile(X_train, 75, axis=0) - np.percentile(X_train, 25, axis=0)
-    X_train_robust = (X_train-median)/interquartile
-    X_test_robust = (X_test-median)/interquartile
-    X_train_check, X_test_check = preprocess(X_train, X_test, method='robust')
-    print('MAX', np.max(np.abs(X_train_check-X_train_robust)))
+    interquartile = np.percentile(X_train, 75, axis=0) - np.percentile(
+        X_train, 25, axis=0
+    )
+    X_train_robust = (X_train - median) / interquartile
+    X_test_robust = (X_test - median) / interquartile
+    X_train_check, X_test_check = preprocess(X_train, X_test, method="robust")
+    print("MAX", np.max(np.abs(X_train_check - X_train_robust)))
     assert np.allclose(X_train_check, X_train_robust, atol=1e-12)
     assert np.allclose(X_test_check, X_test_robust, atol=1e-12)
 
@@ -173,12 +278,26 @@ def test_preprocessor_polynomial():
     --------
     None
     """
-    X = np.random.rand(10,2)
-    bias = np.ones((10,1))
-    col1 = X[:, 0].reshape(-1,1)
-    col2 = X[:, 1].reshape(-1,1)
-    X_poly = np.concatenate([bias, col1, col2, col1**2, col1*col2, col2**2, col1**3, col1**2 * col2, col1 * col2**2, col2**3], axis=1) 
-    X_check, _ = preprocess(X, X, method='poly', degree=3)
+    X = np.random.rand(10, 2)
+    bias = np.ones((10, 1))
+    col1 = X[:, 0].reshape(-1, 1)
+    col2 = X[:, 1].reshape(-1, 1)
+    X_poly = np.concatenate(
+        [
+            bias,
+            col1,
+            col2,
+            col1**2,
+            col1 * col2,
+            col2**2,
+            col1**3,
+            col1**2 * col2,
+            col1 * col2**2,
+            col2**3,
+        ],
+        axis=1,
+    )
+    X_check, _ = preprocess(X, X, method="poly", degree=3)
     assert np.allclose(X_check, X_poly, atol=1e-12)
 
 
@@ -194,12 +313,14 @@ def test_preprocessor_inexistant_method():
     --------
     None
     """
-    X_train = np.random.rand(15,5)
-    X_test = np.random.rand(10,5)
+    X_train = np.random.rand(15, 5)
+    X_test = np.random.rand(10, 5)
     mean = np.mean(X_train, axis=0)
     std = np.std(X_train, axis=0)
-    X_train_standardized = (X_train-mean)/std
-    X_test_standardized = (X_test-mean)/std
-    X_train_check, X_test_check = preprocess(X_train, X_test, method='wrong_name') # Should work like standardize
+    X_train_standardized = (X_train - mean) / std
+    X_test_standardized = (X_test - mean) / std
+    X_train_check, X_test_check = preprocess(
+        X_train, X_test, method="wrong_name"
+    )  # Should work like standardize
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
     assert np.allclose(X_test_check, X_test_standardized, atol=1e-12)
