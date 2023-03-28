@@ -4,12 +4,35 @@ from data_preprocessor import preprocess
 
 
 def rand_data():
+    """
+    A function that returns a random dataset for the tests.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    numpy.ndarray
+        An array of size (10, 6) with random features and labels
+    """
     X = np.random.rand(10,5)
     y = np.random.rand(10,1)
     return np.concatenate([X,y], axis = 1)
 
 
 def test_preparator_is_random_if_no_seed():
+    """
+    Test function to ensure that the preparator returns random splits.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     dataset = rand_data()
     X_train, X_test, y_train, y_test = prepare(dataset)
     # After preparation, data should not be in the exact same order as in the begining
@@ -24,6 +47,17 @@ def test_preparator_is_random_if_no_seed():
 
 
 def test_preparator_with_seed():
+    """
+    Test function to ensure that the preparator gives fixed splits if the seed is set.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     dataset = rand_data()
     X_train, X_test, y_train, y_test = prepare(dataset, random_state=99)
     X_train2, X_test2, y_train2, y_test2 = prepare(dataset, random_state=99)
@@ -35,6 +69,17 @@ def test_preparator_with_seed():
 
 
 def test_preparator_xy_alignement():
+    """
+    Test function to ensure that the preparator keeps the features and the labels grouped correctly after the shuffling.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     dataset = rand_data()
     X = dataset[:, :-1]
     y = dataset[:, -1]
@@ -47,6 +92,17 @@ def test_preparator_xy_alignement():
 
 
 def test_preprocessor_standard():
+    """
+    Test function to ensure that the standard method of the preprocessor is correctly implemented.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.random.rand(15,5)
     X_test = np.random.rand(10,5)
     mean = np.mean(X_train, axis=0)
@@ -59,6 +115,17 @@ def test_preprocessor_standard():
 
 
 def test_preprocessor_minmax():
+    """
+    Test function to ensure that the MinMax method of the preprocessor is correctly implemented.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.random.rand(15,5)
     X_test = np.random.rand(10,5)
     mininmum = np.min(X_train, axis=0)
@@ -71,6 +138,17 @@ def test_preprocessor_minmax():
 
 
 def test_preprocessor_robust():
+    """
+    Test function to ensure that the robust scaler method of the preprocessor is correctly implemented.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.random.rand(15,5)
     X_test = np.random.rand(10,5)
     median = np.median(X_train, axis=0)
@@ -84,6 +162,17 @@ def test_preprocessor_robust():
 
 
 def test_preprocessor_polynomial():
+    """
+    Test function to ensure that the Polynomial Features method of the preprocessor is correctly implemented.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X = np.random.rand(10,2)
     bias = np.ones((10,1))
     col1 = X[:, 0].reshape(-1,1)
@@ -94,6 +183,17 @@ def test_preprocessor_polynomial():
 
 
 def test_preprocessor_inexistant_method():
+    """
+    Test function to ensure that the if no existing method is selected, then the standardization is applied.
+
+    Parameters:
+    -----------
+    None
+
+    Returns:
+    --------
+    None
+    """
     X_train = np.random.rand(15,5)
     X_test = np.random.rand(10,5)
     mean = np.mean(X_train, axis=0)

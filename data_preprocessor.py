@@ -2,6 +2,27 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, PolynomialFeatur
 
 
 def preprocess(X_train, X_test, method='standardize', degree=2):
+    """
+    Creates a training and a test set from the features X and labels y in dataset.
+
+    Parameters
+    ----------
+    X_train : numpy.ndarray
+        Array containing the features of the training set.
+    X_test : numpy.ndarray
+        Array containing the features of the test set.
+    method : string, optional
+        Selects the preprocessing method we want to apply, if None selected, then "standardize" is chosen by default.
+    degree : int, optional
+        Selects the degree of the polynomial features. Is only used if the method is "poly".
+
+    Returns
+    -------
+    numpy.ndarray
+        An array containing the preprocessed features of the training set.
+    numpy.ndarray
+        An array containing the preprocessed features of the test set.   
+    """
     # Select  preprocessor
     if(method == 'standardize'):
         preprocessor = StandardScaler()
