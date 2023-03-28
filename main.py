@@ -1,5 +1,7 @@
 import argparse
 import numpy as np
+import urllib.request
+import os
 import pandas as pd
 import re
 from data_preparator import prepare
@@ -10,16 +12,25 @@ from algorithm import linear_regression_algorithm, decision_tree_regressor_algor
 def main():
     # Define available datasets
     DATASETS = {
-        "housing": (r"./data/housing.data", r"./data/housing.names"),
-        "white": (r"./data/winequality-white.csv", r"./data/winequality.names"),
-        "red": (r"./data/winequality-red.csv", r"./data/winequality.names"),
+        "housing": ("https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data", 
+                    "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"),
+        "white": ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv", 
+                  "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+        "red": ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv", 
+                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
         "red+white": [
-            (r"./data/winequality-white.csv", r"./data/winequality.names"),
-            (r"./data/winequality-red.csv", r"./data/winequality.names"),
+            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+            
+            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
         ],
         "white+red": [
-            (r"./data/winequality-white.csv", r"./data/winequality.names"),
-            (r"./data/winequality-red.csv", r"./data/winequality.names"),
+            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+            
+            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
         ],
     }
 
@@ -136,37 +147,74 @@ def main():
 
 # Pre processor
 
-def parse_file(filepath):
+def load_data(input):
     """
-    Loads data from a file into a numpy array.
+    Load data from a file or URL into a NumPy array.
 
     Parameters
     ----------
-    filepath : str
-        The path to the file to be loaded.
+    input : str
+        The path to the file or the URL of the data to be loaded.
 
     Returns
     -------
-    data : numpy.ndarray
-        A numpy array containing the data from the file.
+    data : ndarray
+        A NumPy array containing the loaded data.
 
     Raises
     ------
     ValueError
-        If the file is not in a valid format.
+        If the input file does not exist.
 
     Notes
     -----
-    The function uses the numpy `loadtxt` method to load data from a file. If the file has a '.csv' extension,
-    the `delimiter` parameter is set to ';', and `skiprows` is set to 1 to skip the header row.
+    This function can load data from files that are either CSV (comma-separated values)
+    or text files with space-separated values. The function automatically detects the file
+    format based on the first line of the file.
+
+    If `input` is a URL, the function uses the `urllib` module to download the data.
+
+    If `input` is a file path, the function checks if the file exists using the `os` module.
+
+    The loaded data is returned as a NumPy array.
+
+    Examples
+    --------
+    >>> data = load_data('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data')
+    >>> data.shape
+    (150, 5)
+
+    >>> data = load_data('data.txt')
+    >>> data.shape
+    (10, 3)
     """
-
-    if filepath.endswith('.csv'):
-        data = np.loadtxt(filepath, delimiter=';', skiprows=1)
+    # check if input is URL or local path
+    if input.startswith('http'):
+        with urllib.request.urlopen(input) as f:
+            first_line = f.readline()
+            if ';' in first_line:
+                # file is CSV
+                data = np.genfromtxt(input, delimiter=';', autostrip=True)
+            else:
+                # file is text with space-separated values
+                data = np.genfromtxt(input, delimiter=' ', autostrip=True)
     else:
-        data = np.loadtxt(filepath)
-
+        # check if file exists
+        if not os.path.isfile(input):
+            raise ValueError("File does not exist")
+        
+        # determine if file is CSV or text with space-separated values
+        with open(input, 'r') as f:
+            first_line = f.readline()
+            if ';' in first_line:
+                # file is CSV
+                data = np.genfromtxt(input, delimiter=';', autostrip=True)
+            else:
+                # file is text with space-separated values
+                data = np.genfromtxt(input, delimiter=' ', autostrip=True)
+    
     return data
+
 
 
 # Pre processor
