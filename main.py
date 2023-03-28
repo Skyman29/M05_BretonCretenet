@@ -11,25 +11,25 @@ from algorithm import linear_regression_algorithm, decision_tree_regressor_algor
 def main():
     # Define available datasets
     DATASETS = {
-        "housing": ("https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data", 
-                    "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"),
-        "white": ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv", 
-                  "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
-        "red": ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv", 
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
-        "red+white": [
-            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
-             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+        'housing': [['https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data', 
+                    'https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names']],
+        'white': [['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv', 
+                  'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names']],
+        'red': [['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv', 
+                'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names']],
+        'red+white': [
+            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv',
+             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
             
-            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
-             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv',
+             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
         ],
-        "white+red": [
-            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
-             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+        'white+red': [
+            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv',
+             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
             
-            ("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
-             "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names"),
+            ['https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv',
+             'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names'],
         ],
     }
 
@@ -52,7 +52,7 @@ def main():
     )
     parser.add_argument(
         "-rs",
-        "--random-state",
+        "--random_state",
         type=int,
         default=42,
         help="Random state for train/test split.",
@@ -100,28 +100,27 @@ def main():
     args = parser.parse_args()
 
     # main workflow
-    
-    # Initialize an empty numpy array to store data
-    data = np.array([])
+    data = load_data(DATASETS[args.dataset][0][0])
 
-    for dataset in DATASETS[args.dataset]:
+    # Continue iteration if multiple dataset to concatenate i.e wine
+    for dataset in DATASETS[args.dataset][1:]:
         temp_data = load_data(dataset[0])
-        
-        
         # Concatenate the new data with the existing data
-        data = np.concatenate((temp_data, data), axis=0)
-    data_label = get_data_column_names(dataset[1])
+        data = np.concatenate((data, temp_data))
+        
+    data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
     
-    X_train, X_test, y_train, y_test = prepare(data, random_state=args.rs)
+    X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
     #Polynomial
+    # X_train = pd.DataFrame(X_train, columns = X_train_labels)
     X_train, X_test = preprocess(X_train, X_test, method='poly', degree=args.degree)
     #Scaling
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
 
     #Feature selection
-    if args.fs:
+    if args.feature_selection:
         X_train, data_label = lasso_regression_feature_selection(X_train, y_train, X_train_labels)
 
     models = {}
