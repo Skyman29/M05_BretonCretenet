@@ -27,11 +27,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           environment-file: env.yml
 
-      - name: Run tests
+      - name: Run all tests (except pull_request marked) and upload coverage to coveralls
         shell: bash -l {0}
         run: |
           conda info -a
           pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@v1
+          coveralls --service=github
