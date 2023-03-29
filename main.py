@@ -210,7 +210,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         }
         if args.verbose > 1:
             print("LinearRegression() fitted")
-    if args.algorithm == ["tree", "both"]:
+    if args.algorithm in ["tree", "both"]:
         if args.verbose > 1:
             print("Fitting DecisionTreeRegressor()...")
         models["tree"] = {
@@ -219,6 +219,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
                 y_train,
                 X_train_labels,
                 max_depth=args.max_depth,
+                random_state=args.random_state,
             )
         }
         if args.verbose > 1:
@@ -241,7 +242,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     # Output
     df_print = pd.DataFrame(models)
     print(
-        "Result of the machine learning model(s), score is the result of Mean absolute error:\n",
+        "Result of the machine learning model(s), Mean absolute error:\n",
         tabulate(df_print, tablefmt="fancy_grid"),
     )
 
