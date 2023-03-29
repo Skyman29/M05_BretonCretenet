@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 def load_requirements(f):
@@ -19,7 +19,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=load_requirements("requirements.txt"),
-    entry_points={"console_scripts": ["breton_cretenet_results = breton_cretenet.main:main"]},
+    entry_points={
+        "console_scripts": ["breton_cretenet_results = breton_cretenet.main:main"]
+    },
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
