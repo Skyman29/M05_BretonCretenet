@@ -347,3 +347,47 @@ def test_load_data(input, expected_shape):
     data = load_data(input)
     assert isinstance(data, np.ndarray)
     assert data.shape == expected_shape
+
+
+def test_get_data_column_names():
+    # Test a valid URL
+    url = "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"
+    assert get_data_column_names(url) == [
+        "CRIM",
+        "ZN",
+        "INDUS",
+        "CHAS",
+        "NOX",
+        "RM",
+        "AGE",
+        "DIS",
+        "RAD",
+        "TAX",
+        "PTRATIO",
+        "B",
+        "LSTAT",
+        "MEDV",
+    ]
+
+    # Test a valid local file
+    file_path = "data/housing.names"
+    assert get_data_column_names(file_path) == [
+        "CRIM",
+        "ZN",
+        "INDUS",
+        "CHAS",
+        "NOX",
+        "RM",
+        "AGE",
+        "DIS",
+        "RAD",
+        "TAX",
+        "PTRATIO",
+        "B",
+        "LSTAT",
+        "MEDV",
+    ]
+
+    # Test a nonexistent file
+    with pytest.raises(ValueError):
+        get_data_column_names("data/nonexistent.csv")
