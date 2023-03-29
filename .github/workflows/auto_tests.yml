@@ -50,6 +50,6 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
-          build_dir: sphinx
+          build_dir: doc/_build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
