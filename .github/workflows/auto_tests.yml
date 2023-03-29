@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  test_on_push:
-    if: ${{ github.event_name == "push" }}
+  normal_ci:
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,8 +33,8 @@ jobs:
           conda info -a
           pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py
 
-  test_on_pull_request:
-    if: ${{ github.event_name == "pull_request" }}
+  pull_request_ci:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
