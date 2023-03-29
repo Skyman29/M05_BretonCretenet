@@ -138,8 +138,11 @@ def detect_column_names_from_file(file):
     pattern = r"\d{1,2}\s*[.-]\s*([a-zA-Z]+)\s*"
 
     # Loop over each line in the file
-    for b_line in file:
-        str_line = b_line.decode("utf-8")
+    for line in file:
+        if type(line) == bytes:
+            str_line = line.decode("utf-8")
+        else:
+            str_line = line
 
         # Check if the current line contains the start flag
         if "attribute information" in str_line.lower():

@@ -65,6 +65,8 @@ def main():
         "white" : white wine quality
         "red" : red wine quality
         "red+white" : red & white wine quality
+
+        Default:housing
         """,
     )
     parser.add_argument(
@@ -72,14 +74,14 @@ def main():
         "--random_state",
         type=int,
         default=42,
-        help="Random state for train/test split.",
+        help="Random state for train/test split. Default = 42",
     )
     parser.add_argument(
         "-deg",
         "--degree",
         type=int,
         default=2,
-        help="Degree for polynomial preprocessing.",
+        help="Degree for polynomial preprocessing. Default = 2",
     )
     parser.add_argument(
         "-p",
@@ -87,7 +89,7 @@ def main():
         type=str,
         choices=["standardize", "minmax", "robust"],
         default="standardize",
-        help="Choose the preprocessing method to use.",
+        help="""Choose the preprocessing method to use. default:standardize """,
     )
     parser.add_argument(
         "-fs",
@@ -102,14 +104,14 @@ def main():
         type=str,
         default="linear",
         choices=["linear", "tree", "both"],
-        help="Choose algorithm for regression analysis",
+        help="""Choose algorithm for regression analysis default:linear """,
     )
     parser.add_argument(
         "-md",
         "--max_depth",
         type=int,
         default=2,
-        help="Choose max depth for DecisionTreeRegressor()",
+        help="Choose max depth for DecisionTreeRegressor() default = 2",
     )
 
     # Parse the arguments

@@ -1,4 +1,7 @@
+import os
+
 import numpy as np
+import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
@@ -8,7 +11,7 @@ from algorithm import (
     linear_regression_algorithm,
     predict_from_regressor,
 )
-from data_preparator import prepare
+from data_preparator import get_data_column_names, load_data, prepare
 from data_preprocessor import preprocess, preprocess_polynomialfeatures
 
 
@@ -325,3 +328,22 @@ def test_preprocessor_inexistant_method():
     )  # Should work like standardize
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
     assert np.allclose(X_test_check, X_test_standardized, atol=1e-12)
+
+
+@pytest.mark.parametrize(
+    "input, expected_shape",
+    [
+        (
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
+            (506, 14),
+        ),
+        (
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+            (4898, 12),
+        ),
+    ],
+)
+def test_load_data(input, expected_shape):
+    data = load_data(input)
+    assert isinstance(data, np.ndarray)
+    assert data.shape == expected_shape
