@@ -134,8 +134,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
 ):
     """The function executes a machine learning workflow on a given dataset, performs feature engineering, feature selection, model training, and model evaluation.
 
-    Args:
-        args_test (list, optional): list of argument for testing the package. Defaults to None.
+    Parameters
+    ----------
+    args_test (list, optional): list of argument for testing the package. Defaults to None.
     """
     args = get_args(args_test)
     # main workflow
