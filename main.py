@@ -51,8 +51,8 @@ DATASETS = {
 def get_args(args=None):
     # Define CLI arguments
     parser = argparse.ArgumentParser(
-        prog="ProgramName",
-        description="Python package to build machine learning model",
+        prog="ML_Model_Trainer_M05_Cretenet_Breton",
+        description="A script to train and evaluate machine learning models on a given dataset. The script applies polynomial feature expansion, scaling, and feature selection to the dataset before fitting the model(s) and generating evaluation scores.",
         epilog="",
     )
     parser.add_argument(
@@ -104,7 +104,7 @@ def get_args(args=None):
         type=str,
         default="linear",
         choices=["linear", "tree", "both"],
-        help="""Choose algorithm for regression analysis default:linear """,
+        help="""Choose algorithm for regression analysis default:linear""",
     )
     parser.add_argument(
         "-md",
@@ -132,6 +132,11 @@ def get_args(args=None):
 def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity in flake8, it should be reduce
     args_test=None,
 ):
+    """The function executes a machine learning workflow on a given dataset, performs feature engineering, feature selection, model training, and model evaluation.
+
+    Args:
+        args_test (list, optional): list of argument for testing the package. Defaults to None.
+    """
     args = get_args(args_test)
     # main workflow
     if args.verbose > 1:
@@ -179,7 +184,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
     if args.verbose > 2:
         if X_train.shape[1] > 15:
-            print_table = X_train[:6, :15]
+            print_table = X_train[:6, :16]
         else:
             print_table = X_train[:6, :]
         print(tabulate(print_table, headers=X_train_labels), "\n")

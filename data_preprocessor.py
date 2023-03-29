@@ -19,8 +19,6 @@ def preprocess(X_train, X_test, method="standardize"):
         Array containing the features of the test set.
     method : string, optional
         Selects the preprocessing method we want to apply, if None selected, then "standardize" is chosen by default.
-    degree : int, optional
-        Selects the degree of the polynomial features. Is only used if the method is "poly".
 
     Returns
     -------

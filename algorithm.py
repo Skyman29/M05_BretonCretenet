@@ -58,6 +58,8 @@ def decision_tree_regressor_algorithm(
         List of strings representing the feature names.
     max_depth : int, optional (default=2)
         The maximum depth of the decision tree.
+    random_state : int, optional (default=0)
+        Seed used by the random number generator.
 
     Returns
     -------
@@ -121,6 +123,8 @@ def lasso_regression_feature_selection(
         List of strings representing the feature names.
     X_test : numpy.ndarray
         Training input data of shape (n_samples, n_features).
+    verbose : int, optional
+        Verbosity level, by default 1.
 
     Returns
     -------
