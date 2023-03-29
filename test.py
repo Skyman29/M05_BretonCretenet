@@ -435,37 +435,22 @@ def test_main_pull_request(
 
 
 @pytest.mark.parametrize("dataset", ["housing", "red+white"])
-@pytest.mark.parametrize("random_state", 42)
-@pytest.mark.parametrize("degree", 1)
-@pytest.mark.parametrize("preprocessing", "standardize")
-@pytest.mark.parametrize("feature_selection", True)
-@pytest.mark.parametrize("algorithm", "both")
-@pytest.mark.parametrize("max_depth", 2)
-def test_main(
-    dataset,
-    random_state,
-    degree,
-    preprocessing,
-    feature_selection,
-    algorithm,
-    max_depth,
-):
+def test_main(dataset):
     args = [
         "-d",
         dataset,
         "-rs",
-        str(random_state),
+        str(42),
         "-deg",
-        str(degree),
+        str(2),
         "-p",
-        preprocessing,
+        "standardize",
         "-a",
-        algorithm,
+        "both",
         "-md",
-        str(max_depth),
+        str(2),
         "-v",
         str(3),
+        "-fs",
     ]
-    if feature_selection:
-        args.append("-fs")
     main(args)

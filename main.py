@@ -15,40 +15,40 @@ from algorithm import (
 from data_preparator import get_data_column_names, load_data, prepare
 from data_preprocessor import preprocess, preprocess_polynomialfeatures
 
+# Define available datasets
+DATASETS = {
+    "housing": [
+        [
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names",
+        ]
+    ],
+    "white": [
+        [
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+        ]
+    ],
+    "red": [
+        [
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+        ]
+    ],
+    "red+white": [
+        [
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+        ],
+        [
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
+        ],
+    ],
+}
 
-def main(args):
-    # Define available datasets
-    DATASETS = {
-        "housing": [
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names",
-            ]
-        ],
-        "white": [
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ]
-        ],
-        "red": [
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ]
-        ],
-        "red+white": [
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ],
-            [
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
-                "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality.names",
-            ],
-        ],
-    }
 
+def get_args(args=None):
     # Define CLI arguments
     parser = argparse.ArgumentParser(
         prog="ProgramName",
@@ -126,11 +126,16 @@ def main(args):
     )
 
     # Parse the arguments
-    args = parser.parse_args(args)
+    return parser.parse_args(args)
 
+
+def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity in flake8, it should be reduce
+    args_test=None,
+):
+    args = get_args(args_test)
     # main workflow
     if args.verbose > 1:
-        print("Loading the dataset...")
+        print("\nLoading the dataset...")
     data = load_data(DATASETS[args.dataset][0][0])
 
     # Continue iteration if multiple dataset to concatenate i.e wine
@@ -141,18 +146,17 @@ def main(args):
     data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
     if args.verbose > 1:
-        print("Dataset loaded/n")
+        print("Dataset loaded\n")
         if args.verbose > 2:
-            print(tabulate(data[:6, :], headers=data_label), "/n/n")
+            print(tabulate(data[:6, :], headers=data_label), "\n")
         print("Splitting the dataset...")
 
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
     # Polynomial
-    # X_train = pd.DataFrame(X_train, columns = X_train_labels)
     if args.verbose > 1:
         print(
-            "Applying polynomial feature expansion of degree {} to the dataset/n".format(
+            "Applying polynomial feature expansion of degree {} to the dataset\n".format(
                 args.degree
             )
         )
@@ -163,14 +167,22 @@ def main(args):
         X_train, X_train_labels, degree=args.degree
     )
     if args.verbose > 2:
-        print(tabulate(X_train[:6, :], headers=X_train_labels), "/n/n")
+        if X_train.shape[1] > 15:
+            print_table = X_train[:6, :15]
+        else:
+            print_table = X_train[:6, :]
+        print(tabulate(print_table, headers=X_train_labels), "\n")
 
     # Scaling
     if args.verbose > 1:
-        print("Applying {} scaling to the dataset/n".format(args.preprocessing))
+        print("Applying {} scaling to the dataset\n".format(args.preprocessing))
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
     if args.verbose > 2:
-        print(tabulate(X_train[:6, :], headers=X_train_labels), "/n/n")
+        if X_train.shape[1] > 15:
+            print_table = X_train[:6, :15]
+        else:
+            print_table = X_train[:6, :]
+        print(tabulate(print_table, headers=X_train_labels), "\n")
 
     # Feature selection
     if args.feature_selection:
@@ -180,14 +192,21 @@ def main(args):
             X_train, y_train, X_train_labels, X_test, args.verbose
         )
         if args.verbose > 2:
-            print("The selected features are :/n/n", tabulate(X_train_labels), "/n/n")
+            print("The selected features are :\n", X_train_labels, "\n")
 
+    # Fitting
     models = {}
     if args.algorithm in ["linear", "both"]:
+        if args.verbose > 1:
+            print("Fitting LinearRegression()...")
         models["linear"] = {
             "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
         }
+        if args.verbose > 1:
+            print("LinearRegression() fitted")
     if args.algorithm == ["tree", "both"]:
+        if args.verbose > 1:
+            print("Fitting DecisionTreeRegressor()...")
         models["tree"] = {
             "model": decision_tree_regressor_algorithm(
                 X_train,
@@ -196,7 +215,12 @@ def main(args):
                 max_depth=args.max_depth,
             )
         }
+        if args.verbose > 1:
+            print("DecisionTreeRegressor() fitted")
 
+    # Scoring
+    if args.verbose > 1:
+        print("Model(s) being evaluated on test set")
     for model_ref, model_data in models.items():
         y_predict_train = predict_from_regressor(
             model_data["model"], X_train, X_train_labels
@@ -208,8 +232,12 @@ def main(args):
         models[model_ref]["score_train"] = score(y_train, y_predict_train)
         models[model_ref]["score_test"] = score(y_test, y_predict_test)
 
+    # Output
     df_print = pd.DataFrame(models)
-    print(tabulate(df_print, tablefmt="fancy_grid"))
+    print(
+        "Result of the machine learning model(s), score is the result of Mean absolute error:\n",
+        tabulate(df_print, tablefmt="fancy_grid"),
+    )
 
 
 if __name__ == "__main__":

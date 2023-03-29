@@ -42,7 +42,9 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels):
     return regressor
 
 
-def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth=2):
+def decision_tree_regressor_algorithm(
+    X_train, y_train, X_train_labels, max_depth=2, random_state=0
+):
     """
     Fit a decision tree regression model to the training data.
 
@@ -71,7 +73,7 @@ def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_dept
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
 
     regressor = DecisionTreeRegressor(
-        max_depth=max_depth, random_state=0
+        max_depth=max_depth, random_state=random_state
     )  # random_state = 0 to stick to the same random seed
     regressor.fit(df_X_train, y_train)
 
