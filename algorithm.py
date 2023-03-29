@@ -106,7 +106,7 @@ def predict_from_regressor(model, X, X_labels):
 
 
 def lasso_regression_feature_selection(
-    X_train, y_train, X_train_labels, X_test, verbose
+    X_train, y_train, X_train_labels, X_test, verbose=1
 ):
     """
     Apply Lasso regression feature selection to the training data.
