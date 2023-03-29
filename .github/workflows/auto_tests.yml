@@ -7,7 +7,7 @@ on:
 
 jobs:
   test_on_push:
-    if: github.event_name == "push"
+    if: ${{ github.event_name == "push" }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,7 +34,7 @@ jobs:
           pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py
 
   test_on_pull_request:
-    if: github.event_name == "pull_request"
+    if: ${{ github.event_name == "pull_request" }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
