@@ -103,7 +103,9 @@ def predict_from_regressor(model, X, X_labels):
     return model.predict(df_X_predict)
 
 
-def lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test):
+def lasso_regression_feature_selection(
+    X_train, y_train, X_train_labels, X_test, verbose
+):
     """
     Apply Lasso regression feature selection to the training data.
 
@@ -143,7 +145,7 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
         {"alpha": [0.01, 0.1, 1.0, 5.0, 10.0]},
         cv=cv,
         scoring="neg_mean_absolute_error",
-        verbose=3,
+        verbose=verbose,
     )
 
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)

@@ -396,6 +396,7 @@ def test_get_data_column_names():
         get_data_column_names("data/nonexistent.csv")
 
 
+@pytest.mark.pull_request
 @pytest.mark.parametrize("dataset", ["housing", "white", "red+white"])
 @pytest.mark.parametrize("random_state", [42, 123])
 @pytest.mark.parametrize("degree", [2, 3])
@@ -403,6 +404,43 @@ def test_get_data_column_names():
 @pytest.mark.parametrize("feature_selection", [True, False])
 @pytest.mark.parametrize("algorithm", ["linear", "both"])
 @pytest.mark.parametrize("max_depth", [2, 3])
+def test_main_pull_request(
+    dataset,
+    random_state,
+    degree,
+    preprocessing,
+    feature_selection,
+    algorithm,
+    max_depth,
+):
+    args = [
+        "-d",
+        dataset,
+        "-rs",
+        str(random_state),
+        "-deg",
+        str(degree),
+        "-p",
+        preprocessing,
+        "-a",
+        algorithm,
+        "-md",
+        str(max_depth),
+        "-v",
+        str(1),
+    ]
+    if feature_selection:
+        args.append("-fs")
+    main(args)
+
+
+@pytest.mark.parametrize("dataset", ["housing", "red+white"])
+@pytest.mark.parametrize("random_state", 42)
+@pytest.mark.parametrize("degree", 1)
+@pytest.mark.parametrize("preprocessing", "standardize")
+@pytest.mark.parametrize("feature_selection", True)
+@pytest.mark.parametrize("algorithm", "both")
+@pytest.mark.parametrize("max_depth", 2)
 def test_main(
     dataset,
     random_state,
@@ -425,6 +463,8 @@ def test_main(
         algorithm,
         "-md",
         str(max_depth),
+        "-v",
+        str(3),
     ]
     if feature_selection:
         args.append("-fs")

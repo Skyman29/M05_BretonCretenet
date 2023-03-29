@@ -31,4 +31,4 @@ jobs:
         shell: bash -l {0}
         run: |
           conda info -a
-          pytest -sv --cov-report term-missing --cov=. test.py
+          pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py

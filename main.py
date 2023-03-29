@@ -113,11 +113,24 @@ def main(args):
         default=2,
         help="Choose max depth for DecisionTreeRegressor() default = 2",
     )
+    parser.add_argument(
+        "-vb",
+        "--verbose",
+        type=int,
+        choices=[1, 2, 3],
+        default=1,
+        help="""Choose to display information during the workflow
+        1:Minimalist (only the output)
+        2:Medium (mention steps)
+        3:Maximum""",
+    )
 
     # Parse the arguments
     args = parser.parse_args(args)
 
     # main workflow
+    if args.verbose > 1:
+        print("Loading the dataset...")
     data = load_data(DATASETS[args.dataset][0][0])
 
     # Continue iteration if multiple dataset to concatenate i.e wine
@@ -127,45 +140,54 @@ def main(args):
         data = np.concatenate((data, temp_data))
     data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
+    if args.verbose > 1:
+        print("Dataset loaded/n")
+        if args.verbose > 2:
+            print(tabulate(data[:6, :], headers=data_label), "/n/n")
+        print("Splitting the dataset...")
 
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
     # Polynomial
     # X_train = pd.DataFrame(X_train, columns = X_train_labels)
+    if args.verbose > 1:
+        print(
+            "Applying polynomial feature expansion of degree {} to the dataset/n".format(
+                args.degree
+            )
+        )
     X_test, _ = preprocess_polynomialfeatures(
         X_test, X_train_labels, degree=args.degree
     )
     X_train, X_train_labels = preprocess_polynomialfeatures(
         X_train, X_train_labels, degree=args.degree
     )
+    if args.verbose > 2:
+        print(tabulate(X_train[:6, :], headers=X_train_labels), "/n/n")
 
     # Scaling
+    if args.verbose > 1:
+        print("Applying {} scaling to the dataset/n".format(args.preprocessing))
     X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
+    if args.verbose > 2:
+        print(tabulate(X_train[:6, :], headers=X_train_labels), "/n/n")
 
     # Feature selection
     if args.feature_selection:
+        if args.verbose > 1:
+            print("Features selection using Lasso Regression ongoing...")
         X_train, X_train_labels, X_test = lasso_regression_feature_selection(
-            X_train, y_train, X_train_labels, X_test
+            X_train, y_train, X_train_labels, X_test, args.verbose
         )
+        if args.verbose > 2:
+            print("The selected features are :/n/n", tabulate(X_train_labels), "/n/n")
 
     models = {}
-    if args.algorithm == "linear":
+    if args.algorithm in ["linear", "both"]:
         models["linear"] = {
             "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
         }
-    elif args.algorithm == "tree":
-        models["tree"] = {
-            "model": decision_tree_regressor_algorithm(
-                X_train,
-                y_train,
-                X_train_labels,
-                max_depth=args.max_depth,
-            )
-        }
-    elif args.algorithm == "both":
-        models["linear"] = {
-            "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
-        }
+    if args.algorithm == ["tree", "both"]:
         models["tree"] = {
             "model": decision_tree_regressor_algorithm(
                 X_train,
