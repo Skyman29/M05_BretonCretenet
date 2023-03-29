@@ -192,9 +192,11 @@ def test_lasso_regression_feature_selection():
     X_test = 3 * X_train
     y_train = np.array([10, 20, 30])
     X_train_labels = ["feature1", "feature2", "feature3"]
-    X_train_selected, X_train_labels_selected = lasso_regression_feature_selection(
-        X_train, y_train, X_train_labels, X_test
-    )
+    (
+        X_train_selected,
+        X_train_labels_selected,
+        X_test,
+    ) = lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
 
