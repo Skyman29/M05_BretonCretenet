@@ -13,6 +13,7 @@ from algorithm import (
 )
 from data_preparator import get_data_column_names, load_data, prepare
 from data_preprocessor import preprocess, preprocess_polynomialfeatures
+from main import main
 
 
 def rand_data():
@@ -391,3 +392,38 @@ def test_get_data_column_names():
     # Test a nonexistent file
     with pytest.raises(ValueError):
         get_data_column_names("data/nonexistent.csv")
+
+
+@pytest.mark.parametrize("dataset", ["housing", "white", "red+white"])
+@pytest.mark.parametrize("random_state", [42, 123])
+@pytest.mark.parametrize("degree", [2, 3])
+@pytest.mark.parametrize("preprocessing", ["standardize", "minmax"])
+@pytest.mark.parametrize("feature_selection", [True, False])
+@pytest.mark.parametrize("algorithm", ["linear", "both"])
+@pytest.mark.parametrize("max_depth", [2, 3])
+def test_main(
+    dataset,
+    random_state,
+    degree,
+    preprocessing,
+    feature_selection,
+    algorithm,
+    max_depth,
+):
+    args = [
+        "-d",
+        dataset,
+        "-rs",
+        str(random_state),
+        "-deg",
+        str(degree),
+        "-p",
+        preprocessing,
+        "-a",
+        algorithm,
+        "-md",
+        str(max_depth),
+    ]
+    if feature_selection:
+        args.append("-fs")
+    main(args)

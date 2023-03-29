@@ -16,7 +16,7 @@ from data_preparator import get_data_column_names, load_data, prepare
 from data_preprocessor import preprocess, preprocess_polynomialfeatures
 
 
-def main():
+def main(args):
     # Define available datasets
     DATASETS = {
         "housing": [
@@ -115,7 +115,7 @@ def main():
     )
 
     # Parse the arguments
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     # main workflow
     data = load_data(DATASETS[args.dataset][0][0])
@@ -127,7 +127,6 @@ def main():
         data = np.concatenate((data, temp_data))
     data_label = get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
-    y_train_label = data_label[-1]
 
     X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
 
@@ -146,15 +145,13 @@ def main():
     # Feature selection
     if args.feature_selection:
         X_train, X_train_labels, X_test = lasso_regression_feature_selection(
-            X_train, y_train, X_train_labels, y_train_label, X_test
+            X_train, y_train, X_train_labels, X_test
         )
 
     models = {}
     if args.algorithm == "linear":
         models["linear"] = {
-            "model": linear_regression_algorithm(
-                X_train, y_train, X_train_labels, y_train_label
-            )
+            "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
         }
     elif args.algorithm == "tree":
         models["tree"] = {
@@ -162,22 +159,18 @@ def main():
                 X_train,
                 y_train,
                 X_train_labels,
-                y_train_label,
                 max_depth=args.max_depth,
             )
         }
     elif args.algorithm == "both":
         models["linear"] = {
-            "model": linear_regression_algorithm(
-                X_train, y_train, X_train_labels, y_train_label
-            )
+            "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
         }
         models["tree"] = {
             "model": decision_tree_regressor_algorithm(
                 X_train,
                 y_train,
                 X_train_labels,
-                y_train_label,
                 max_depth=args.max_depth,
             )
         }

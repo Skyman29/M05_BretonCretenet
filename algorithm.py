@@ -136,7 +136,7 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
     if len(X_train) > 500:
         cv = 5
     else:
-        return X_train, X_train_labels
+        return X_train, X_train_labels, X_test
 
     cv = GridSearchCV(
         Lasso(),
@@ -157,7 +157,11 @@ def lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
     X_train_selected = df_X_train[X_train_labels_selected]
     X_test_selected = df_X_test[X_train_labels_selected]
 
-    return X_train_selected.to_numpy(), X_train_labels_selected, X_test_selected
+    return (
+        X_train_selected.to_numpy(),
+        X_train_labels_selected,
+        X_test_selected.to_numpy(),
+    )
 
 
 def score(y_true, y_predict):
