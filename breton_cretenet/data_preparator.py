@@ -23,7 +23,7 @@ def prepare(dataset, random_state=None, stratify=None):
     numpy.ndarray
         y_train, an array containing the labels of the training set.
     numpy.ndarray
-        y_test, an array containing the labels of the test set.    
+        y_test, an array containing the labels of the test set.
     """
     # Split the dataset between features X and labels y (y is the last column)
     X = dataset[:, :-1]

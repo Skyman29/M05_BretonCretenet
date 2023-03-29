@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>breton_cretenet.algorithm &mdash; breton_cretenet 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            breton_cretenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">M05_BretonCretenet</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">breton_cretenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">breton_cretenet.algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for breton_cretenet.algorithm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># algorithm</span>
+
+<span class="c1"># This module contains all the function in order to build the machine learning algorithm of the project</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+
+
+<div class="viewcode-block" id="linear_regression_algorithm"><a class="viewcode-back" href="../../breton_cretenet.html#breton_cretenet.algorithm.linear_regression_algorithm">[docs]</a><span class="k">def</span> <span class="nf">linear_regression_algorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_train_labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit a linear regression model to the training data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train : numpy.ndarray</span>
+<span class="sd">        Training input data of shape (n_samples, n_features).</span>
+<span class="sd">    y_train : numpy.ndarray</span>
+<span class="sd">        Target values of shape (n_samples,).</span>
+<span class="sd">    X_train_labels : list</span>
+<span class="sd">        List of strings representing the feature names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sklearn.linear_model.LinearRegression</span>
+<span class="sd">        A fitted linear regression model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+    <span class="c1"># assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)</span>
+    <span class="c1"># assert len(X_train) == len(y_train) # Check if data input have the same amount of samples</span>
+
+    <span class="c1"># Switching to DataFrame so X train labels are stored in model</span>
+    <span class="n">df_X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X_train_labels</span><span class="p">)</span>
+
+    <span class="n">regressor</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">regressor</span></div>
+
+
+<div class="viewcode-block" id="decision_tree_regressor_algorithm"><a class="viewcode-back" href="../../breton_cretenet.html#breton_cretenet.algorithm.decision_tree_regressor_algorithm">[docs]</a><span class="k">def</span> <span class="nf">decision_tree_regressor_algorithm</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_train_labels</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit a decision tree regression model to the training data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train : numpy.ndarray</span>
+<span class="sd">        Training input data of shape (n_samples, n_features).</span>
+<span class="sd">    y_train : numpy.ndarray</span>
+<span class="sd">        Target values of shape (n_samples,).</span>
+<span class="sd">    X_train_labels : list</span>
+<span class="sd">        List of strings representing the feature names.</span>
+<span class="sd">    max_depth : int, optional (default=2)</span>
+<span class="sd">        The maximum depth of the decision tree.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sklearn.tree.DecisionTreeRegressor</span>
+<span class="sd">        A fitted decision tree regression model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+    <span class="c1"># assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)</span>
+    <span class="c1"># assert len(X_train) == len(y_train) # Check if data input have the same amount of samples</span>
+
+    <span class="c1"># Switching to DataFrame so X train labels are stored in model</span>
+    <span class="n">df_X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X_train_labels</span><span class="p">)</span>
+
+    <span class="n">regressor</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="n">max_depth</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>  <span class="c1"># random_state = 0 to stick to the same random seed</span>
+    <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">regressor</span></div>
+
+
+<div class="viewcode-block" id="predict_from_regressor"><a class="viewcode-back" href="../../breton_cretenet.html#breton_cretenet.algorithm.predict_from_regressor">[docs]</a><span class="k">def</span> <span class="nf">predict_from_regressor</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">X_labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Predict the target values for new input data using a given regression model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : sklearn estimator</span>
+<span class="sd">        A fitted regression model.</span>
+<span class="sd">    X : numpy.ndarray</span>
+<span class="sd">        Input data of shape (n_samples, n_features).</span>
+<span class="sd">    X_labels : list</span>
+<span class="sd">        List of strings representing the feature names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Predicted target values of shape (n_samples,).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if Input Data correspond to model parameters, i.e features numbers, order</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">feature</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">feature_names_in_</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">X_labels</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df_X_predict</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">X_labels</span><span class="p">)</span>
+        <span class="n">df_X_predict</span> <span class="o">=</span> <span class="n">df_X_predict</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">feature_names_in_</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df_X_predict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lasso_regression_feature_selection"><a class="viewcode-back" href="../../breton_cretenet.html#breton_cretenet.algorithm.lasso_regression_feature_selection">[docs]</a><span class="k">def</span> <span class="nf">lasso_regression_feature_selection</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_train_labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply Lasso regression feature selection to the training data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_train : numpy.ndarray</span>
+<span class="sd">        Training input data of shape (n_samples, n_features).</span>
+<span class="sd">    y_train : numpy.ndarray</span>
+<span class="sd">        Target values of shape (n_samples,).</span>
+<span class="sd">    X_train_labels : list</span>
+<span class="sd">        List of strings representing the feature names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing the selected training input data of shape (n_samples, n_selected_features)</span>
+<span class="sd">        and a list of strings representing the names of the selected features.</span>
+<span class="sd">        If the number of training samples is less than or equal to 50, the function returns</span>
+<span class="sd">        the original input data and feature names unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)</span>
+    <span class="c1"># assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)</span>
+    <span class="c1"># assert len(X_train) == len(y_train) # Check if data input have the same amount of samples</span>
+    <span class="c1"># assert len(X_train) == len(X_train_labels)  # Check if data input have the same amount of samples</span>
+
+    <span class="c1"># Cannot apply cv on low amount of sample, just return input as output</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_train_labels</span>
+
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">Lasso</span><span class="p">(),</span>
+        <span class="p">{</span><span class="s2">&quot;model__alpha&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)},</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;neg_mean_absolute_error&quot;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="c1"># print(cv.best_params_)</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span>
+    <span class="n">X_train_labels_selected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train_labels</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">X_train_selected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">X_train_selected</span><span class="p">,</span> <span class="n">X_train_labels_selected</span></div>
+
+
+<div class="viewcode-block" id="score"><a class="viewcode-back" href="../../breton_cretenet.html#breton_cretenet.algorithm.score">[docs]</a><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_predict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the mean absolute error (MAE) between true and predicted values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_true : np.ndarray</span>
+<span class="sd">        Correct target values.</span>
+<span class="sd">    y_predict : np.ndarray</span>
+<span class="sd">        Estimated target values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Mean absolute error between `y_true` and `y_predict`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; y_true = np.array([3, -0.5, 2, 7])</span>
+<span class="sd">    &gt;&gt;&gt; y_predict = np.array([2.5, 0.0, 2, 8])</span>
+<span class="sd">    &gt;&gt;&gt; score(y_true, y_predict)</span>
+<span class="sd">    0.5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_predict</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Quentin Cretenet et Gaetan Breton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

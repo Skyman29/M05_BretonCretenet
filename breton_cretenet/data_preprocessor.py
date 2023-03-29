@@ -1,7 +1,12 @@
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, PolynomialFeatures, RobustScaler
+from sklearn.preprocessing import (
+    MinMaxScaler,
+    PolynomialFeatures,
+    RobustScaler,
+    StandardScaler,
+)
 
 
-def preprocess(X_train, X_test, method='standardize', degree=2):
+def preprocess(X_train, X_test, method="standardize", degree=2):
     """
     Creates a training and a test set from the features X and labels y in dataset.
 
@@ -21,20 +26,22 @@ def preprocess(X_train, X_test, method='standardize', degree=2):
     numpy.ndarray
         An array containing the preprocessed features of the training set.
     numpy.ndarray
-        An array containing the preprocessed features of the test set.   
+        An array containing the preprocessed features of the test set.
     """
     # Select  preprocessor
-    if(method == 'standardize'):
+    if method == "standardize":
         preprocessor = StandardScaler()
-    elif(method == 'minmax'):
+    elif method == "minmax":
         preprocessor = MinMaxScaler()
-    elif(method == 'poly'):
+    elif method == "poly":
         preprocessor = PolynomialFeatures(degree=degree)
-    elif(method == 'robust'):
+    elif method == "robust":
         preprocessor = RobustScaler()
     else:
-        print("WARNING :  'method' can only be set to 'standardize', 'minmax', or 'poly'.\n",
-            "No valid method was selected, 'standard' is selected by default.")
+        print(
+            "WARNING :  'method' can only be set to 'standardize', 'minmax', or 'poly'.\n",
+            "No valid method was selected, 'standard' is selected by default.",
+        )
         preprocessor = StandardScaler()
     # Preprocess features
     X_train_pp = preprocessor.fit_transform(X_train)

@@ -1,0 +1,10 @@
+numpy
+pytest
+pytest-cov
+scikit-learn
+pandas
+setuptools
+pre-commit
+black
+flake8
+sphinx

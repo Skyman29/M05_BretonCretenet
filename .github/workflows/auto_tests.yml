@@ -11,24 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        python-version: [ "3.9", "3.10"]
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          auto-activate-base: false
-          activate-environment: test
-          python-version: ${{ matrix.python-version }}
-          environment-file: env.yml
-
-      - name: Run tests
+      # Default action: run something (prepares the Python environment)
+      - name: Prepare Python ${{ matrix.python-version }}
         shell: bash -l {0}
         run: |
-          conda info -a
-          pytest -sv --cov=. test.py
+          python -m pip install --upgrade pip
+          pip install wheel
+
+      - name: Install package and build dependencies for Python ${{ matrix.python-version }}
+        shell: bash -l {0}
+        run: |
+          pip install .
+          pip install -r build-requirements.txt  #only required for CI tests
+
+      - name: Run all tests
+        shell: bash -l {0}
+        run: |
+          breton_cretenet_results
+          sphinx-build -b doctest doc sphinx
+          pytest -sv --cov=breton_cretenet test.py
+
+      - name: Build documentation
+        if: ${{ matrix.python-version == '3.10' }}  #builds only one variant
+        shell: bash -l {0}
+        run: |
+          sphinx-build doc sphinx
+          touch sphinx/.nojekyll
