@@ -34,7 +34,7 @@ jobs:
         shell: bash -l {0}
         run: |
           breton_cretenet_results
-          pytest -sv --cov=breton_cretenet test.py
+          pytest -sv --cov=breton_cretenet breton_cretenet/test.py
 
       - name: Build documentation
         if: ${{ matrix.python-version == '3.10' }}  #builds only one variant
