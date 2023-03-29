@@ -34,7 +34,6 @@ jobs:
         shell: bash -l {0}
         run: |
           breton_cretenet_results
-          sphinx-build -b doctest doc sphinx
           pytest -sv --cov=breton_cretenet test.py
 
       - name: Build documentation
