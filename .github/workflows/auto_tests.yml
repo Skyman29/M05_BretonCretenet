@@ -28,7 +28,7 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install .
-          pip install -r build-requirements.txt  #only required for CI tests
+          pip install -r requirements.txt
 
       - name: Run all tests
         shell: bash -l {0}
