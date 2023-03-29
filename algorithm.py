@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeRegressor
 
 
-def linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label):
+def linear_regression_algorithm(X_train, y_train, X_train_labels):
     """
     Fit a linear regression model to the training data.
 
@@ -22,8 +22,6 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
-    y_train_label : str
-        string representing the feature name.
 
     Returns
     -------
@@ -37,17 +35,14 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, y_train_label)
 
     # Switching to DataFrame so X train, y train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
-    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
 
     regressor = LinearRegression()
-    regressor.fit(df_X_train, df_y_train)
+    regressor.fit(df_X_train, y_train)
 
     return regressor
 
 
-def decision_tree_regressor_algorithm(
-    X_train, y_train, X_train_labels, y_train_label, max_depth=2
-):
+def decision_tree_regressor_algorithm(X_train, y_train, X_train_labels, max_depth=2):
     """
     Fit a decision tree regression model to the training data.
 
@@ -59,8 +54,6 @@ def decision_tree_regressor_algorithm(
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
-    y_train_label : str
-        string representing the feature name.
     max_depth : int, optional (default=2)
         The maximum depth of the decision tree.
 
@@ -76,12 +69,11 @@ def decision_tree_regressor_algorithm(
 
     # Switching to DataFrame so X train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
-    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
 
     regressor = DecisionTreeRegressor(
         max_depth=max_depth, random_state=0
     )  # random_state = 0 to stick to the same random seed
-    regressor.fit(df_X_train, df_y_train)
+    regressor.fit(df_X_train, y_train)
 
     return regressor
 
@@ -111,9 +103,7 @@ def predict_from_regressor(model, X, X_labels):
     return model.predict(df_X_predict)
 
 
-def lasso_regression_feature_selection(
-    X_train, y_train, X_train_labels, y_train_label, X_test
-):
+def lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test):
     """
     Apply Lasso regression feature selection to the training data.
 
@@ -125,8 +115,6 @@ def lasso_regression_feature_selection(
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
-    y_train_label : str
-        string representing the feature name.
     X_test : numpy.ndarray
         Training input data of shape (n_samples, n_features).
 
@@ -159,10 +147,9 @@ def lasso_regression_feature_selection(
     )
 
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
-    df_y_train = pd.DataFrame(y_train, columns=[y_train_label])
     df_X_test = pd.DataFrame(X_test, columns=X_train_labels)
 
-    cv.fit(df_X_train, df_y_train)
+    cv.fit(df_X_train, y_train)
 
     # print(cv.best_params_)
     coefficients = cv.best_estimator_.coef_
