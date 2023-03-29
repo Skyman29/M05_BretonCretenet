@@ -45,14 +45,14 @@ jobs:
           sphinx-build doc doc/_build
           touch doc/_build/.nojekyll
 
-      - name: Deploy documentation to GitHub Pages
-        if: ${{ matrix.python-version == '3.10' }}
-        uses: crazy-max/ghaction-github-pages@v3
-        with:
-          target_branch: gh-pages
-          build_dir: doc/_build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Deploy documentation to GitHub Pages
+        #if: ${{ matrix.python-version == '3.10' }}
+        #uses: crazy-max/ghaction-github-pages@v3
+        #with:
+          #target_branch: gh-pages
+          #build_dir: doc/_build
+        #env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build PyPI (source) package
         # builds only from one variant
