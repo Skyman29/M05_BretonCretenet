@@ -351,6 +351,12 @@ def test_load_data(input, expected_shape):
     assert isinstance(data, np.ndarray)
     assert data.shape == expected_shape
 
+    # Test a nonexistent file
+    with pytest.raises(ValueError):
+        get_data_column_names(
+            "https://upload.wikimedia.org/wikipedia/commons/1/14/KHThisIsFine.jpg"
+        )
+
 
 def test_get_data_column_names():
     # Test a valid URL
