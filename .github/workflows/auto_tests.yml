@@ -32,4 +32,6 @@ jobs:
         run: |
           conda info -a
           pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py
-          coveralls --service=github
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v1
