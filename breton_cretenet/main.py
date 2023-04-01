@@ -4,6 +4,7 @@ import os
 import numpy as np
 import pandas as pd
 from tabulate import tabulate
+
 from . import algorithm, data_preparator, data_preprocessor
 
 # Define available datasets
@@ -148,7 +149,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
             print(tabulate(data[:6, :], headers=data_label), "\n")
         print("Splitting the dataset...")
 
-    X_train, X_test, y_train, y_test = data_preparator.prepare(data, random_state=args.random_state)
+    X_train, X_test, y_train, y_test = data_preparator.prepare(
+        data, random_state=args.random_state
+    )
 
     # Polynomial
     if args.verbose > 1:
@@ -173,7 +176,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     # Scaling
     if args.verbose > 1:
         print("Applying {} scaling to the dataset\n".format(args.preprocessing))
-    X_train, X_test = data_preprocessor.preprocess(X_train, X_test, method=args.preprocessing)
+    X_train, X_test = data_preprocessor.preprocess(
+        X_train, X_test, method=args.preprocessing
+    )
     if args.verbose > 2:
         if X_train.shape[1] > 15:
             print_table = X_train[:6, :16]
@@ -197,7 +202,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         if args.verbose > 1:
             print("Fitting LinearRegression()...")
         models["linear"] = {
-            "model": algorithm.linear_regression_algorithm(X_train, y_train, X_train_labels)
+            "model": algorithm.linear_regression_algorithm(
+                X_train, y_train, X_train_labels
+            )
         }
         if args.verbose > 1:
             print("LinearRegression() fitted")

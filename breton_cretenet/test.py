@@ -190,7 +190,9 @@ def test_lasso_regression_feature_selection():
         X_train_selected,
         X_train_labels_selected,
         X_test,
-    ) = algorithm.lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
+    ) = algorithm.lasso_regression_feature_selection(
+        X_train, y_train, X_train_labels, X_test
+    )
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
 
@@ -304,7 +306,9 @@ def test_preprocessor_polynomial():
         ],
         axis=1,
     )
-    X_check, _ = data_preprocessor.preprocess_polynomialfeatures(X, ["x1", "x2"], degree=3)
+    X_check, _ = data_preprocessor.preprocess_polynomialfeatures(
+        X, ["x1", "x2"], degree=3
+    )
     assert np.allclose(X_check, X_poly, atol=1e-12)
 
 

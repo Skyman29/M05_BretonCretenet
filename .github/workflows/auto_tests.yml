@@ -50,7 +50,7 @@ jobs:
         shell: bash -l {0}
         run: |
           python setup.py sdist
-  
+
   pull_request_ci:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
