@@ -1,8 +1,11 @@
+import os
+
 import numpy as np
+import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
-from . import algorithm, data_preparator, data_preprocessor
+from . import algorithm, data_preparator, data_preprocessor, main
 
 
 def rand_data():
@@ -180,12 +183,14 @@ def test_lasso_regression_feature_selection():
     None
     """
     X_train = np.array([[1, 2, 0], [2, 4, 0], [3, 6, 0]])
+    X_test = 3 * X_train
     y_train = np.array([10, 20, 30])
     X_train_labels = ["feature1", "feature2", "feature3"]
     (
         X_train_selected,
         X_train_labels_selected,
-    ) = algorithm.lasso_regression_feature_selection(X_train, y_train, X_train_labels)
+        X_test,
+    ) = algorithm.lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
 
@@ -299,7 +304,7 @@ def test_preprocessor_polynomial():
         ],
         axis=1,
     )
-    X_check, _ = data_preprocessor.preprocess(X, X, method="poly", degree=3)
+    X_check, _ = data_preprocessor.preprocess_polynomialfeatures(X, ["x1", "x2"], degree=3)
     assert np.allclose(X_check, X_poly, atol=1e-12)
 
 
@@ -326,3 +331,132 @@ def test_preprocessor_inexistant_method():
     )  # Should work like standardize
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
     assert np.allclose(X_test_check, X_test_standardized, atol=1e-12)
+
+
+@pytest.mark.parametrize(
+    "input, expected_shape",
+    [
+        (
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data",
+            (506, 14),
+        ),
+        (
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv",
+            (4898, 12),
+        ),
+    ],
+)
+def test_load_data(input, expected_shape):
+    data = data_preparator.load_data(input)
+    assert isinstance(data, np.ndarray)
+    assert data.shape == expected_shape
+
+    # Test a nonexistent file
+    with pytest.raises(ValueError):
+        data_preparator.get_data_column_names(
+            "https://upload.wikimedia.org/wikipedia/commons/1/14/KHThisIsFine.jpg"
+        )
+
+
+def test_get_data_column_names():
+    # Test a valid URL
+    url = "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"
+    assert data_preparator.get_data_column_names(url) == [
+        "CRIM",
+        "ZN",
+        "INDUS",
+        "CHAS",
+        "NOX",
+        "RM",
+        "AGE",
+        "DIS",
+        "RAD",
+        "TAX",
+        "PTRATIO",
+        "B",
+        "LSTAT",
+        "MEDV",
+    ]
+
+    # Test a valid local file
+    file_path = "data/housing.names"
+    assert data_preparator.get_data_column_names(file_path) == [
+        "CRIM",
+        "ZN",
+        "INDUS",
+        "CHAS",
+        "NOX",
+        "RM",
+        "AGE",
+        "DIS",
+        "RAD",
+        "TAX",
+        "PTRATIO",
+        "B",
+        "LSTAT",
+        "MEDV",
+    ]
+
+    # Test a nonexistent file
+    with pytest.raises(ValueError):
+        data_preparator.get_data_column_names("data/nonexistent.csv")
+
+
+@pytest.mark.pull_request
+@pytest.mark.parametrize("dataset", ["housing", "white", "red+white"])
+@pytest.mark.parametrize("random_state", [42, 123])
+@pytest.mark.parametrize("degree", [2, 3])
+@pytest.mark.parametrize("preprocessing", ["standardize", "minmax"])
+@pytest.mark.parametrize("feature_selection", [True, False])
+@pytest.mark.parametrize("algorithm", ["linear", "both"])
+@pytest.mark.parametrize("max_depth", [2, 3])
+def test_main_pull_request(
+    dataset,
+    random_state,
+    degree,
+    preprocessing,
+    feature_selection,
+    algorithm,
+    max_depth,
+):
+    args = [
+        "-d",
+        dataset,
+        "-rs",
+        str(random_state),
+        "-deg",
+        str(degree),
+        "-p",
+        preprocessing,
+        "-a",
+        algorithm,
+        "-md",
+        str(max_depth),
+        "-v",
+        str(1),
+    ]
+    if feature_selection:
+        args.append("-fs")
+    main.main(args)
+
+
+@pytest.mark.parametrize("dataset", ["housing", "red+white"])
+def test_main(dataset):
+    args = [
+        "-d",
+        dataset,
+        "-rs",
+        str(42),
+        "-deg",
+        str(2),
+        "-p",
+        "standardize",
+        "-a",
+        "both",
+        "-md",
+        str(2),
+        "-v",
+        str(3),
+        "-fs",
+    ]
+    main.main(args)
