@@ -3,7 +3,6 @@ name: CI
 on:
   push:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   normal_ci:
@@ -15,23 +14,42 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          auto-activate-base: false
-          activate-environment: test
-          python-version: ${{ matrix.python-version }}
-          environment-file: env.yml
-
-      - name: Run all tests (except pull_request marked)
+      # Default action: run something (prepares the Python environment)
+      - name: Prepare Python ${{ matrix.python-version }}
         shell: bash -l {0}
         run: |
-          conda info -a
-          pytest -sv --cov-report term-missing -m "not pull_request" --cov=. test.py
+          python -m pip install --upgrade pip
+          pip install wheel
+
+      - name: Install package and build dependencies for Python ${{ matrix.python-version }}
+        shell: bash -l {0}
+        run: |
+          pip install .
+          pip install -r requirements.txt
+
+      - name: Run all tests
+        shell: bash -l {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          breton_cretenet_results
+          pytest -sv --cov-report term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+
+      - name: Build documentation
+        if: ${{ matrix.python-version == '3.10' }}
+        shell: bash -l {0}
+        run: |
+          sphinx-build doc doc/_build
+          touch doc/_build/.nojekyll
+
+      - name: Build PyPI (source) package
+        # builds only from one variant
+        if: ${{ matrix.python-version == '3.10' }}
+        shell: bash -l {0}
+        run: |
+          python setup.py sdist
 
   pull_request_ci:
     if: ${{ github.event_name == 'pull_request' }}
@@ -42,20 +60,55 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          auto-activate-base: false
-          activate-environment: test
-          python-version: ${{ matrix.python-version }}
-          environment-file: env.yml
+      - name: Prepare Python ${{ matrix.python-version }}
+        shell: bash -l {0}
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel
+
+      - name: Install package and build dependencies for Python ${{ matrix.python-version }}
+        shell: bash -l {0}
+        run: |
+          pip install .
+          pip install -r requirements.txt
 
       - name: Run all tests
         shell: bash -l {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          conda info -a
-          pytest -sv --cov-report term-missing --cov=. test.py
+          breton_cretenet_results
+          pytest -sv --cov-report term-missing --cov=breton_cretenet breton_cretenet/test.py
+
+      - name: Build documentation
+        if: ${{ matrix.python-version == '3.10' }}
+        shell: bash -l {0}
+        run: |
+          sphinx-build doc doc/_build
+          touch doc/_build/.nojekyll
+
+      - name: Deploy documentation to GitHub Pages
+        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: doc/_build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build PyPI (source) package
+        # builds only from one variant
+        if: ${{ matrix.python-version == '3.10' }}
+        shell: bash -l {0}
+        run: |
+          python setup.py sdist
+
+      - name: Deploy package to TestPyPI
+        # deploys only one variant, and if it is tagged
+        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
+          repository_url: https://test.pypi.org/legacy/

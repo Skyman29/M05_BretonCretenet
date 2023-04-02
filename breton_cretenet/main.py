@@ -5,15 +5,7 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
-from algorithm import (
-    decision_tree_regressor_algorithm,
-    lasso_regression_feature_selection,
-    linear_regression_algorithm,
-    predict_from_regressor,
-    score,
-)
-from data_preparator import get_data_column_names, load_data, prepare
-from data_preprocessor import preprocess, preprocess_polynomialfeatures
+from . import algorithm, data_preparator, data_preprocessor
 
 # Define available datasets
 DATASETS = {
@@ -142,14 +134,14 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     # main workflow
     if args.verbose > 1:
         print("\nLoading the dataset...")
-    data = load_data(DATASETS[args.dataset][0][0])
+    data = data_preparator.load_data(DATASETS[args.dataset][0][0])
 
     # Continue iteration if multiple dataset to concatenate i.e wine
     for dataset in DATASETS[args.dataset][1:]:
-        temp_data = load_data(dataset[0])
+        temp_data = data_preparator.load_data(dataset[0])
         # Concatenate the new data with the existing data
         data = np.concatenate((data, temp_data))
-    data_label = get_data_column_names(DATASETS[args.dataset][0][1])
+    data_label = data_preparator.get_data_column_names(DATASETS[args.dataset][0][1])
     X_train_labels = data_label[:-1]
     if args.verbose > 1:
         print("Dataset loaded\n")
@@ -157,7 +149,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
             print(tabulate(data[:6, :], headers=data_label), "\n")
         print("Splitting the dataset...")
 
-    X_train, X_test, y_train, y_test = prepare(data, random_state=args.random_state)
+    X_train, X_test, y_train, y_test = data_preparator.prepare(
+        data, random_state=args.random_state
+    )
 
     # Polynomial
     if args.verbose > 1:
@@ -166,10 +160,10 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
                 args.degree
             )
         )
-    X_test, _ = preprocess_polynomialfeatures(
+    X_test, _ = data_preprocessor.preprocess_polynomialfeatures(
         X_test, X_train_labels, degree=args.degree
     )
-    X_train, X_train_labels = preprocess_polynomialfeatures(
+    X_train, X_train_labels = data_preprocessor.preprocess_polynomialfeatures(
         X_train, X_train_labels, degree=args.degree
     )
     if args.verbose > 2:
@@ -182,7 +176,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     # Scaling
     if args.verbose > 1:
         print("Applying {} scaling to the dataset\n".format(args.preprocessing))
-    X_train, X_test = preprocess(X_train, X_test, method=args.preprocessing)
+    X_train, X_test = data_preprocessor.preprocess(
+        X_train, X_test, method=args.preprocessing
+    )
     if args.verbose > 2:
         if X_train.shape[1] > 15:
             print_table = X_train[:6, :16]
@@ -194,7 +190,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     if args.feature_selection:
         if args.verbose > 1:
             print("Features selection using Lasso Regression ongoing...")
-        X_train, X_train_labels, X_test = lasso_regression_feature_selection(
+        X_train, X_train_labels, X_test = algorithm.lasso_regression_feature_selection(
             X_train, y_train, X_train_labels, X_test, args.verbose
         )
         if args.verbose > 2:
@@ -206,7 +202,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         if args.verbose > 1:
             print("Fitting LinearRegression()...")
         models["linear"] = {
-            "model": linear_regression_algorithm(X_train, y_train, X_train_labels)
+            "model": algorithm.linear_regression_algorithm(
+                X_train, y_train, X_train_labels
+            )
         }
         if args.verbose > 1:
             print("LinearRegression() fitted")
@@ -214,7 +212,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         if args.verbose > 1:
             print("Fitting DecisionTreeRegressor()...")
         models["tree"] = {
-            "model": decision_tree_regressor_algorithm(
+            "model": algorithm.decision_tree_regressor_algorithm(
                 X_train,
                 y_train,
                 X_train_labels,
@@ -229,15 +227,15 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     if args.verbose > 1:
         print("Model(s) being evaluated on test set")
     for model_ref, model_data in models.items():
-        y_predict_train = predict_from_regressor(
+        y_predict_train = algorithm.predict_from_regressor(
             model_data["model"], X_train, X_train_labels
         )
-        y_predict_test = predict_from_regressor(
+        y_predict_test = algorithm.predict_from_regressor(
             model_data["model"], X_test, X_train_labels
         )
 
-        models[model_ref]["score_train"] = score(y_train, y_predict_train)
-        models[model_ref]["score_test"] = score(y_test, y_predict_test)
+        models[model_ref]["score_train"] = algorithm.score(y_train, y_predict_train)
+        models[model_ref]["score_test"] = algorithm.score(y_test, y_predict_test)
 
     # Output
     df_print = pd.DataFrame(models)

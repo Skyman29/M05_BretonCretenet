@@ -5,15 +5,7 @@ import pytest
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 
-from algorithm import (
-    decision_tree_regressor_algorithm,
-    lasso_regression_feature_selection,
-    linear_regression_algorithm,
-    predict_from_regressor,
-)
-from data_preparator import get_data_column_names, load_data, prepare
-from data_preprocessor import preprocess, preprocess_polynomialfeatures
-from main import main
+from . import algorithm, data_preparator, data_preprocessor, main
 
 
 def rand_data():
@@ -47,7 +39,7 @@ def test_preparator_is_random_if_no_seed():
     None
     """
     dataset = rand_data()
-    X_train, X_test, y_train, y_test = prepare(dataset)
+    X_train, X_test, y_train, y_test = data_preparator.prepare(dataset)
     # After preparation, data should not be in the exact same order as in the begining
     assert not np.allclose(
         np.concatenate([X_train, X_test], axis=0), dataset[:, :-1], atol=1e-12
@@ -56,7 +48,7 @@ def test_preparator_is_random_if_no_seed():
         np.concatenate([y_train, y_test], axis=0), dataset[:, -1], atol=1e-12
     )
     # Without seeds, two preparations should give different results
-    X_train2, X_test2, y_train2, y_test2 = prepare(dataset)
+    X_train2, X_test2, y_train2, y_test2 = data_preparator.prepare(dataset)
     assert not np.allclose(X_train, X_train2, atol=1e-12)
     assert not np.allclose(y_train, y_train2, atol=1e-12)
     assert not np.allclose(X_test, X_test2, atol=1e-12)
@@ -76,8 +68,10 @@ def test_preparator_with_seed():
     None
     """
     dataset = rand_data()
-    X_train, X_test, y_train, y_test = prepare(dataset, random_state=99)
-    X_train2, X_test2, y_train2, y_test2 = prepare(dataset, random_state=99)
+    X_train, X_test, y_train, y_test = data_preparator.prepare(dataset, random_state=99)
+    X_train2, X_test2, y_train2, y_test2 = data_preparator.prepare(
+        dataset, random_state=99
+    )
     # With the same seed, both preparations should be identical
     assert np.allclose(X_train, X_train2, atol=1e-12)
     assert np.allclose(y_train, y_train2, atol=1e-12)
@@ -100,7 +94,7 @@ def test_preparator_xy_alignement():
     dataset = rand_data()
     X = dataset[:, :-1]
     y = dataset[:, -1]
-    X_train, X_test, y_train, y_test = prepare(dataset, random_state=99)
+    X_train, X_test, y_train, y_test = data_preparator.prepare(dataset, random_state=99)
     # Check that the X and y are shuffled but still correspond y_train[i] must correspond to X_train[i, :]
     for i in range(len(y_train)):
         assert np.allclose(X_train[i, :], X[y == y_train[i], :], atol=1e-12)
@@ -124,7 +118,7 @@ def test_linear_regression_algorithm():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ["feature1", "feature2"]
-    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+    model = algorithm.linear_regression_algorithm(X_train, y_train, X_train_labels)
     assert isinstance(model, LinearRegression)
 
 
@@ -145,7 +139,7 @@ def test_decision_tree_regressor_algorithm():
     y_train = np.array([10, 20, 30])
     X_train_labels = ["feature1", "feature2"]
     max_depth = 2
-    model = decision_tree_regressor_algorithm(
+    model = algorithm.decision_tree_regressor_algorithm(
         X_train, y_train, X_train_labels, max_depth
     )
     assert isinstance(model, DecisionTreeRegressor)
@@ -167,11 +161,11 @@ def test_predict_from_regressor():
     X_train = np.array([[1, 2], [3, 4], [5, 6]])
     y_train = np.array([10, 20, 30])
     X_train_labels = ["feature1", "feature2"]
-    model = linear_regression_algorithm(X_train, y_train, X_train_labels)
+    model = algorithm.linear_regression_algorithm(X_train, y_train, X_train_labels)
 
     X = np.array([[1, 2], [3, 4], [5, 6]])
     X_labels = ["feature1", "feature2"]
-    y_predicted = predict_from_regressor(model, X, X_labels)
+    y_predicted = algorithm.predict_from_regressor(model, X, X_labels)
     assert isinstance(y_predicted, np.ndarray)
     assert y_predicted.shape == (len(X),)
 
@@ -196,7 +190,9 @@ def test_lasso_regression_feature_selection():
         X_train_selected,
         X_train_labels_selected,
         X_test,
-    ) = lasso_regression_feature_selection(X_train, y_train, X_train_labels, X_test)
+    ) = algorithm.lasso_regression_feature_selection(
+        X_train, y_train, X_train_labels, X_test
+    )
     assert isinstance(X_train_selected, np.ndarray)
     assert isinstance(X_train_labels_selected, list)
 
@@ -219,7 +215,9 @@ def test_preprocessor_standard():
     std = np.std(X_train, axis=0)
     X_train_standardized = (X_train - mean) / std
     X_test_standardized = (X_test - mean) / std
-    X_train_check, X_test_check = preprocess(X_train, X_test, method="standardize")
+    X_train_check, X_test_check = data_preprocessor.preprocess(
+        X_train, X_test, method="standardize"
+    )
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
     assert np.allclose(X_test_check, X_test_standardized, atol=1e-12)
 
@@ -242,7 +240,9 @@ def test_preprocessor_minmax():
     maximum = np.max(X_train, axis=0)
     X_train_minmax = (X_train - mininmum) / (maximum - mininmum)
     X_test_minmax = (X_test - mininmum) / (maximum - mininmum)
-    X_train_check, X_test_check = preprocess(X_train, X_test, method="minmax")
+    X_train_check, X_test_check = data_preprocessor.preprocess(
+        X_train, X_test, method="minmax"
+    )
     assert np.allclose(X_train_check, X_train_minmax, atol=1e-12)
     assert np.allclose(X_test_check, X_test_minmax, atol=1e-12)
 
@@ -267,7 +267,9 @@ def test_preprocessor_robust():
     )
     X_train_robust = (X_train - median) / interquartile
     X_test_robust = (X_test - median) / interquartile
-    X_train_check, X_test_check = preprocess(X_train, X_test, method="robust")
+    X_train_check, X_test_check = data_preprocessor.preprocess(
+        X_train, X_test, method="robust"
+    )
     print("MAX", np.max(np.abs(X_train_check - X_train_robust)))
     assert np.allclose(X_train_check, X_train_robust, atol=1e-12)
     assert np.allclose(X_test_check, X_test_robust, atol=1e-12)
@@ -304,7 +306,9 @@ def test_preprocessor_polynomial():
         ],
         axis=1,
     )
-    X_check, _ = preprocess_polynomialfeatures(X, ["x1", "x2"], degree=3)
+    X_check, _ = data_preprocessor.preprocess_polynomialfeatures(
+        X, ["x1", "x2"], degree=3
+    )
     assert np.allclose(X_check, X_poly, atol=1e-12)
 
 
@@ -326,7 +330,7 @@ def test_preprocessor_inexistant_method():
     std = np.std(X_train, axis=0)
     X_train_standardized = (X_train - mean) / std
     X_test_standardized = (X_test - mean) / std
-    X_train_check, X_test_check = preprocess(
+    X_train_check, X_test_check = data_preprocessor.preprocess(
         X_train, X_test, method="wrong_name"
     )  # Should work like standardize
     assert np.allclose(X_train_check, X_train_standardized, atol=1e-12)
@@ -347,13 +351,13 @@ def test_preprocessor_inexistant_method():
     ],
 )
 def test_load_data(input, expected_shape):
-    data = load_data(input)
+    data = data_preparator.load_data(input)
     assert isinstance(data, np.ndarray)
     assert data.shape == expected_shape
 
     # Test a nonexistent file
     with pytest.raises(ValueError):
-        get_data_column_names(
+        data_preparator.get_data_column_names(
             "https://upload.wikimedia.org/wikipedia/commons/1/14/KHThisIsFine.jpg"
         )
 
@@ -361,7 +365,7 @@ def test_load_data(input, expected_shape):
 def test_get_data_column_names():
     # Test a valid URL
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"
-    assert get_data_column_names(url) == [
+    assert data_preparator.get_data_column_names(url) == [
         "CRIM",
         "ZN",
         "INDUS",
@@ -380,7 +384,7 @@ def test_get_data_column_names():
 
     # Test a valid local file
     file_path = "data/housing.names"
-    assert get_data_column_names(file_path) == [
+    assert data_preparator.get_data_column_names(file_path) == [
         "CRIM",
         "ZN",
         "INDUS",
@@ -399,7 +403,7 @@ def test_get_data_column_names():
 
     # Test a nonexistent file
     with pytest.raises(ValueError):
-        get_data_column_names("data/nonexistent.csv")
+        data_preparator.get_data_column_names("data/nonexistent.csv")
 
 
 @pytest.mark.pull_request
@@ -437,7 +441,7 @@ def test_main_pull_request(
     ]
     if feature_selection:
         args.append("-fs")
-    main(args)
+    main.main(args)
 
 
 @pytest.mark.parametrize("dataset", ["housing", "red+white"])
@@ -459,4 +463,4 @@ def test_main(dataset):
         str(3),
         "-fs",
     ]
-    main(args)
+    main.main(args)
