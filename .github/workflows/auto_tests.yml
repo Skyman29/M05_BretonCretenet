@@ -13,8 +13,11 @@ jobs:
         python-version: [ "3.9", "3.10"]
 
     steps:
-      - name: Checkout code
+      - name: Checkout code & pre-commit
         uses: actions/checkout@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          pre-commit-version: v3.0.0
 
       # Default action: run something (prepares the Python environment)
       - name: Prepare Python ${{ matrix.python-version }}
@@ -59,8 +62,11 @@ jobs:
         python-version: [ "3.9", "3.10"]
 
     steps:
-      - name: Checkout code
+      - name: Checkout code & pre-commit
         uses: actions/checkout@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          pre-commit-version: v3.0.0
 
       - name: Prepare Python ${{ matrix.python-version }}
         shell: bash -l {0}
