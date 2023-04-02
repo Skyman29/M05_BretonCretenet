@@ -5,6 +5,13 @@ on:
   pull_request:
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.0
+
   normal_ci:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
