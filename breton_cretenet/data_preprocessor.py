@@ -7,7 +7,7 @@ from sklearn.preprocessing import (
 )
 
 
-def preprocess(X_train, X_test, method="standardize"):
+def preprocess(X_train, X_test, method="standardize", verbose = 1):
     """
     Creates a training and a test set from the features X and labels y in dataset.
 
@@ -27,6 +27,8 @@ def preprocess(X_train, X_test, method="standardize"):
     numpy.ndarray
         An array containing the preprocessed features of the test set.
     """
+    if verbose > 1:
+            print(f"Applying {method} scaling to the dataset\n")
     # Select  preprocessor
     if method == "standardize":
         preprocessor = StandardScaler()
@@ -38,7 +40,7 @@ def preprocess(X_train, X_test, method="standardize"):
         preprocessor = RobustScaler()
     else:
         print(
-            "WARNING :  'method' can only be set to 'standardize', 'minmax', or 'poly'.\n",
+            "WARNING :  'method' can only be set to 'standardize' or 'minmax'.\n",
             "No valid method was selected, 'standard' is selected by default.",
         )
         preprocessor = StandardScaler()
@@ -48,7 +50,7 @@ def preprocess(X_train, X_test, method="standardize"):
     return X_train_pp, X_test_pp
 
 
-def preprocess_polynomialfeatures(data, data_column_names, degree=2):
+def preprocess_polynomialfeatures(data, data_column_names, degree=2, verbose = 1):
     """
     Applies polynomial feature expansion to a Numpy array of data, and returns the resulting array and the names of the
     columns in the expanded feature matrix.
@@ -71,6 +73,9 @@ def preprocess_polynomialfeatures(data, data_column_names, degree=2):
             1. A Numpy array representing the expanded feature matrix.
             2. A list of the names of the columns in the expanded feature matrix.
     """
+    if verbose > 1:
+        print(f"Applying polynomial feature expansion of degree {degree} to the dataset\n")
+        
     df_data = pd.DataFrame(data, columns=data_column_names)
     preprocessor = PolynomialFeatures(degree=degree, include_bias=True)
 

@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeRegressor
 
 
-def linear_regression_algorithm(X_train, y_train, X_train_labels):
+def linear_regression_algorithm(X_train, y_train, X_train_labels, verbose=1):
     """
     Fit a linear regression model to the training data.
 
@@ -32,12 +32,18 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels):
     # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
     # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
+    
+    if args.verbose > 1:
+        print("Fitting LinearRegression()...")
 
     # Switching to DataFrame so X train, y train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
 
     regressor = LinearRegression()
     regressor.fit(df_X_train, y_train)
+
+    if verbose > 1:
+        print("LinearRegression() fitted")
 
     return regressor
 
@@ -71,6 +77,9 @@ def decision_tree_regressor_algorithm(
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
     # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
 
+    if args.verbose > 1:
+        print("Fitting DecisionTreeRegressor()...")
+
     # Switching to DataFrame so X train labels are stored in model
     df_X_train = pd.DataFrame(X_train, columns=X_train_labels)
 
@@ -78,6 +87,9 @@ def decision_tree_regressor_algorithm(
         max_depth=max_depth, random_state=random_state
     )  # random_state = 0 to stick to the same random seed
     regressor.fit(df_X_train, y_train)
+
+    if args.verbose > 1:
+        print("DecisionTreeRegressor() fitted")
 
     return regressor
 
@@ -140,6 +152,9 @@ def lasso_regression_feature_selection(
     # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
     # assert len(X_train) == len(X_train_labels)  # Check if data input have the same amount of samples
 
+    if verbose > 1:
+                print("Features selection using Lasso Regression ongoing...")
+
     # Cannot apply cv on low amount of sample, just return input as output
     if len(X_train) > 500:
         cv = 5
@@ -164,6 +179,9 @@ def lasso_regression_feature_selection(
     X_train_labels_selected = np.array(X_train_labels)[np.abs(coefficients) > 0]
     X_train_selected = df_X_train[X_train_labels_selected]
     X_test_selected = df_X_test[X_train_labels_selected]
+
+    if verbose > 2:
+                print("The selected features are :\n", X_train_labels_selected, "\n")
 
     return (
         X_train_selected.to_numpy(),

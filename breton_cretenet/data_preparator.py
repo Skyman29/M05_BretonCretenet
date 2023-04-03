@@ -41,7 +41,7 @@ def prepare(dataset, random_state=None, stratify=None):
     return X_train, X_test, y_train, y_test
 
 
-def load_data(input):
+def load_data(input, verbose = 1):
     """
     Load data from a CSV or fixed-width file into a NumPy array.
 
@@ -67,6 +67,8 @@ def load_data(input):
     extension: ".csv" files are assumed to be comma-separated, while ".data" files are
     assumed to be fixed-width. The header of the file is ignored.
     """
+    if verbose>1:
+        print("\nLoading the dataset...")
     # check if input is URL or local path
     if input.endswith(".csv"):
         return pd.read_csv(input, delimiter=";").to_numpy()
