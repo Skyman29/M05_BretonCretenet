@@ -126,9 +126,22 @@ jobs:
           password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
           repository_url: https://test.pypi.org/legacy/
 
-  coveralls:
+  coveralls_pull:
     name: Indicate completion to coveralls.io
-    needs: test
+    needs: pull_request_ci
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Finished
+      run: |
+        pip3 install --upgrade coveralls
+        coveralls --service=github --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  coveralls_push:
+    name: Indicate completion to coveralls.io
+    needs: normal_ci
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
