@@ -131,117 +131,134 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     args_test (list, optional): list of argument for testing the package. Defaults to None.
     """
     args = get_args(args_test)
+    df_dict = {}
+    random_state_list = [
+        args.random_state,
+        2 * args.random_state,
+        3 * args.random_state,
+    ]
     # main workflow
-    if args.verbose > 1:
-        print("\nLoading the dataset...")
-    data = data_preparator.load_data(DATASETS[args.dataset][0][0])
+    for random_state in random_state_list:
+        data = data_preparator.load_data(DATASETS[args.dataset][0][0], args.verbose)
 
-    # Continue iteration if multiple dataset to concatenate i.e wine
-    for dataset in DATASETS[args.dataset][1:]:
-        temp_data = data_preparator.load_data(dataset[0])
-        # Concatenate the new data with the existing data
-        data = np.concatenate((data, temp_data))
-    data_label = data_preparator.get_data_column_names(DATASETS[args.dataset][0][1])
-    X_train_labels = data_label[:-1]
-    if args.verbose > 1:
-        print("Dataset loaded\n")
-        if args.verbose > 2:
-            print(tabulate(data[:6, :], headers=data_label), "\n")
-        print("Splitting the dataset...")
-
-    X_train, X_test, y_train, y_test = data_preparator.prepare(
-        data, random_state=args.random_state
-    )
-
-    # Polynomial
-    if args.verbose > 1:
-        print(
-            "Applying polynomial feature expansion of degree {} to the dataset\n".format(
-                args.degree
-            )
-        )
-    X_test, _ = data_preprocessor.preprocess_polynomialfeatures(
-        X_test, X_train_labels, degree=args.degree
-    )
-    X_train, X_train_labels = data_preprocessor.preprocess_polynomialfeatures(
-        X_train, X_train_labels, degree=args.degree
-    )
-    if args.verbose > 2:
-        if X_train.shape[1] > 15:
-            print_table = X_train[:6, :15]
-        else:
-            print_table = X_train[:6, :]
-        print(tabulate(print_table, headers=X_train_labels), "\n")
-
-    # Scaling
-    if args.verbose > 1:
-        print("Applying {} scaling to the dataset\n".format(args.preprocessing))
-    X_train, X_test = data_preprocessor.preprocess(
-        X_train, X_test, method=args.preprocessing
-    )
-    if args.verbose > 2:
-        if X_train.shape[1] > 15:
-            print_table = X_train[:6, :16]
-        else:
-            print_table = X_train[:6, :]
-        print(tabulate(print_table, headers=X_train_labels), "\n")
-
-    # Feature selection
-    if args.feature_selection:
+        # Continue iteration if multiple dataset to concatenate i.e wine
+        for dataset in DATASETS[args.dataset][1:]:
+            temp_data = data_preparator.load_data(dataset[0])
+            # Concatenate the new data with the existing data
+            data = np.concatenate((data, temp_data))
+        data_label = data_preparator.get_data_column_names(DATASETS[args.dataset][0][1])
+        X_train_labels = data_label[:-1]
         if args.verbose > 1:
-            print("Features selection using Lasso Regression ongoing...")
-        X_train, X_train_labels, X_test = algorithm.lasso_regression_feature_selection(
-            X_train, y_train, X_train_labels, X_test, args.verbose
+            print("Dataset loaded\n")
+            if args.verbose > 2:
+                print(tabulate(data[:6, :], headers=data_label), "\n")
+            print("Splitting the dataset...")
+
+        X_train, X_test, y_train, y_test = data_preparator.prepare(
+            data, random_state=random_state
+        )
+
+        # Polynomial
+        X_test, _ = data_preprocessor.preprocess_polynomialfeatures(
+            X_test, X_train_labels, degree=args.degree, verbose=args.verbose
+        )
+        X_train, X_train_labels = data_preprocessor.preprocess_polynomialfeatures(
+            X_train, X_train_labels, degree=args.degree
         )
         if args.verbose > 2:
-            print("The selected features are :\n", X_train_labels, "\n")
+            if X_train.shape[1] > 15:
+                print_table = X_train[:6, :15]
+            else:
+                print_table = X_train[:6, :]
+            print(tabulate(print_table, headers=X_train_labels), "\n")
 
-    # Fitting
-    models = {}
-    if args.algorithm in ["linear", "both"]:
-        if args.verbose > 1:
-            print("Fitting LinearRegression()...")
-        models["linear"] = {
-            "model": algorithm.linear_regression_algorithm(
-                X_train, y_train, X_train_labels
-            )
-        }
-        if args.verbose > 1:
-            print("LinearRegression() fitted")
-    if args.algorithm in ["tree", "both"]:
-        if args.verbose > 1:
-            print("Fitting DecisionTreeRegressor()...")
-        models["tree"] = {
-            "model": algorithm.decision_tree_regressor_algorithm(
+        # Scaling
+        X_train, X_test = data_preprocessor.preprocess(
+            X_train, X_test, method=args.preprocessing
+        )
+        if args.verbose > 2:
+            if X_train.shape[1] > 15:
+                print_table = X_train[:6, :16]
+            else:
+                print_table = X_train[:6, :]
+            print(tabulate(print_table, headers=X_train_labels), "\n")
+
+        # Feature selection
+        if args.feature_selection:
+            (
                 X_train,
-                y_train,
                 X_train_labels,
-                max_depth=args.max_depth,
-                random_state=args.random_state,
+                X_test,
+            ) = algorithm.lasso_regression_feature_selection(
+                X_train, y_train, X_train_labels, X_test, args.verbose
             )
-        }
+
+        # Fitting the dataset
+        models = {}
+        if args.algorithm in ["linear", "both"]:
+            models["linear"] = {
+                "model": algorithm.linear_regression_algorithm(
+                    X_train, y_train, X_train_labels, verbose=args.verbose
+                )
+            }
+
+        if args.algorithm in ["tree", "both"]:
+            models["tree"] = {
+                "model": algorithm.decision_tree_regressor_algorithm(
+                    X_train,
+                    y_train,
+                    X_train_labels,
+                    max_depth=args.max_depth,
+                    random_state=random_state,
+                    verbose=args.verbose,
+                )
+            }
+
+        # Scoring
         if args.verbose > 1:
-            print("DecisionTreeRegressor() fitted")
+            print("Model(s) being evaluated on test set")
+        for model_ref, model_data in models.items():
+            y_predict_train = algorithm.predict_from_regressor(
+                model_data["model"], X_train, X_train_labels
+            )
+            y_predict_test = algorithm.predict_from_regressor(
+                model_data["model"], X_test, X_train_labels
+            )
 
-    # Scoring
-    if args.verbose > 1:
-        print("Model(s) being evaluated on test set")
-    for model_ref, model_data in models.items():
-        y_predict_train = algorithm.predict_from_regressor(
-            model_data["model"], X_train, X_train_labels
-        )
-        y_predict_test = algorithm.predict_from_regressor(
-            model_data["model"], X_test, X_train_labels
-        )
+            models[model_ref]["score_train"] = algorithm.score(y_train, y_predict_train)
+            models[model_ref]["score_test"] = algorithm.score(y_test, y_predict_test)
 
-        models[model_ref]["score_train"] = algorithm.score(y_train, y_predict_train)
-        models[model_ref]["score_test"] = algorithm.score(y_test, y_predict_test)
+        # Output
 
-    # Output
-    df_print = pd.DataFrame(models)
+        df_dict[f"df_{random_state}"] = pd.DataFrame(models)
+
+    # Concatenate the dataframes and create a multi-column index
+    dfs = []
+    for key, df in df_dict.items():
+        # Extract the random_state from the key
+        rs = int(key.split("_")[1])
+        # Add a column with the random_state to the dataframe
+        df["random_state"] = rs
+        # Append the modified dataframe to the list
+        dfs.append(df)
+
+    # Concatenate the dataframes along the rows and create a multi-column index based on the model and random_state columns
+    df_columns = dfs[2].columns.to_list()
+    df_columns.remove("random_state")
+    result = pd.concat(
+        dfs,
+        keys=[(model, rs) for model in df_columns for rs in random_state_list],
+        axis=0,
+    )
+    # Re-arrange column order
+    result = result[["random_state"] + df_columns]
+
+    # Make index shorter
+    result.index = result.index.map(lambda idx: idx[2])
+    # Print fancy table
     print(
         "Result of the machine learning model(s), Mean absolute error:\n",
-        tabulate(df_print, tablefmt="fancy_grid"),
+        tabulate(result, headers="keys", tablefmt="fancy_grid", numalign="center"),
     )
 
 
