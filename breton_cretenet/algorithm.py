@@ -22,6 +22,8 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, verbose=1):
         Target values of shape (n_samples,).
     X_train_labels : list
         List of strings representing the feature names.
+    verbose : int, optional
+        Verbosity level of information, by default 1.
 
     Returns
     -------
@@ -66,6 +68,8 @@ def decision_tree_regressor_algorithm(
         The maximum depth of the decision tree.
     random_state : int, optional (default=0)
         Seed used by the random number generator.
+    verbose : int, optional
+        Verbosity level of information, by default 1.
 
     Returns
     -------
@@ -136,7 +140,7 @@ def lasso_regression_feature_selection(
     X_test : numpy.ndarray
         Training input data of shape (n_samples, n_features).
     verbose : int, optional
-        Verbosity level, by default 1.
+        Verbosity level of information, by default 1.
 
     Returns
     -------

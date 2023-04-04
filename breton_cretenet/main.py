@@ -41,6 +41,18 @@ DATASETS = {
 
 
 def get_args(args=None):
+    """
+    Parse command-line arguments.
+    Parameters
+    ----------
+    args : list, optional
+        List of command-line arguments to parse. The default is None.
+
+    Returns
+    -------
+    args : argparse.Namespace
+        Parsed arguments.
+    """
     # Define CLI arguments
     parser = argparse.ArgumentParser(
         prog="ML_Model_Trainer_M05_Cretenet_Breton",
@@ -121,14 +133,30 @@ def get_args(args=None):
     return parser.parse_args(args)
 
 
-def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity in flake8, it should be reduce
-    args_test=None,
-):
-    """The function executes a machine learning workflow on a given dataset, performs feature engineering, feature selection, model training, and model evaluation.
+def main(args_test=None):
+    """
+    The function executes a machine learning workflow on a given dataset, performs feature engineering, feature selection, model training, and model evaluation.
 
     Parameters
     ----------
-    args_test (list, optional): list of argument for testing the package. Defaults to None.
+    args_test : list, optional
+        List of arguments for testing the package. Default is None.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    This function performs the following steps:
+    1. Loads the dataset and concatenates multiple datasets if applicable.
+    2. Splits the dataset into training and testing sets.
+    3. Performs polynomial feature engineering on the dataset.
+    4. Scales the dataset.
+    5. Performs feature selection on the dataset. Optional
+    6. Trains the model(s) on the training set and evaluates the performance on the testing set.
+    7. Concatenates the results and outputs them in a formatted table.
+
     """
     args = get_args(args_test)
     df_dict = {}
