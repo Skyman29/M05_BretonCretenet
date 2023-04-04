@@ -43,7 +43,7 @@ jobs:
       - name: Send to coveralls
         uses: coverallsapp/github-action@v2
         with:
-          path-to-lcov: coverage.lcov
+          path-to-lcov: "coverage.lcov"
 
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0
