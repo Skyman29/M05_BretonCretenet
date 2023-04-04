@@ -132,10 +132,14 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     """
     args = get_args(args_test)
     df_dict = {}
-    random_state_list = [args.random_state, 2*args.random_state, 3*args.random_state]
+    random_state_list = [
+        args.random_state,
+        2 * args.random_state,
+        3 * args.random_state,
+    ]
     # main workflow
     for random_state in random_state_list:
-        data = data_preparator.load_data(DATASETS[args.dataset][0][0],args.verbose)
+        data = data_preparator.load_data(DATASETS[args.dataset][0][0], args.verbose)
 
         # Continue iteration if multiple dataset to concatenate i.e wine
         for dataset in DATASETS[args.dataset][1:]:
@@ -156,7 +160,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
 
         # Polynomial
         X_test, _ = data_preprocessor.preprocess_polynomialfeatures(
-            X_test, X_train_labels, degree=args.degree, verbose = args.verbose
+            X_test, X_train_labels, degree=args.degree, verbose=args.verbose
         )
         X_train, X_train_labels = data_preprocessor.preprocess_polynomialfeatures(
             X_train, X_train_labels, degree=args.degree
@@ -181,23 +185,24 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
 
         # Feature selection
         if args.feature_selection:
-            
-            X_train, X_train_labels, X_test = algorithm.lasso_regression_feature_selection(
+            (
+                X_train,
+                X_train_labels,
+                X_test,
+            ) = algorithm.lasso_regression_feature_selection(
                 X_train, y_train, X_train_labels, X_test, args.verbose
             )
 
         # Fitting
         models = {}
         if args.algorithm in ["linear", "both"]:
-            
             models["linear"] = {
                 "model": algorithm.linear_regression_algorithm(
-                    X_train, y_train, X_train_labels, verbose = args.verbose
+                    X_train, y_train, X_train_labels, verbose=args.verbose
                 )
             }
- 
+
         if args.algorithm in ["tree", "both"]:
-            
             models["tree"] = {
                 "model": algorithm.decision_tree_regressor_algorithm(
                     X_train,
@@ -205,7 +210,7 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
                     X_train_labels,
                     max_depth=args.max_depth,
                     random_state=random_state,
-                    verbose = args.verbose
+                    verbose=args.verbose,
                 )
             }
 
@@ -224,13 +229,15 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
             models[model_ref]["score_test"] = algorithm.score(y_test, y_predict_test)
 
         # Output
-        
-        df_dict[f'df_{random_state}'] = pd.DataFrame(models)
-    df_print_total = pd.concat(df_dict.values(), keys=[f'RS:{rs}' for rs in random_state_list])
+
+        df_dict[f"df_{random_state}"] = pd.DataFrame(models)
+    df_print_total = pd.concat(
+        df_dict.values(), keys=[f"RS:{rs}" for rs in random_state_list]
+    )
     print(
         "Result of the machine learning model(s), Mean absolute error:\n",
-        tabulate(df_print_total, tablefmt="fancy_grid"),)
-    
+        tabulate(df_print_total, tablefmt="fancy_grid"),
+    )
 
 
 if __name__ == "__main__":

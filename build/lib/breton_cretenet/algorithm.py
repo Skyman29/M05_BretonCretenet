@@ -32,7 +32,7 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, verbose=1):
     # assert type(X_train) == np.ndarray # Check if data input is an acceptable format i.e {array-like, sparse matrix} of shape (n_samples, n_features)
     # assert type(y_train) == np.ndarray # Check if data input is an acceptable format i.e array-like of shape (n_samples,) or (n_samples, n_targets)
     # assert len(X_train) == len(y_train) # Check if data input have the same amount of samples
-    
+
     if verbose > 1:
         print("Fitting LinearRegression()...")
 
@@ -49,7 +49,7 @@ def linear_regression_algorithm(X_train, y_train, X_train_labels, verbose=1):
 
 
 def decision_tree_regressor_algorithm(
-    X_train, y_train, X_train_labels, max_depth=2, random_state=0, verbose = 1
+    X_train, y_train, X_train_labels, max_depth=2, random_state=0, verbose=1
 ):
     """
     Fit a decision tree regression model to the training data.
@@ -153,7 +153,7 @@ def lasso_regression_feature_selection(
     # assert len(X_train) == len(X_train_labels)  # Check if data input have the same amount of samples
 
     if verbose > 1:
-                print("Features selection using Lasso Regression ongoing...")
+        print("Features selection using Lasso Regression ongoing...")
 
     # Cannot apply cv on low amount of sample, just return input as output
     if len(X_train) > 500:
@@ -181,7 +181,7 @@ def lasso_regression_feature_selection(
     X_test_selected = df_X_test[X_train_labels_selected]
 
     if verbose > 2:
-                print("The selected features are :\n", X_train_labels_selected, "\n")
+        print("The selected features are :\n", X_train_labels_selected, "\n")
 
     return (
         X_train_selected.to_numpy(),
