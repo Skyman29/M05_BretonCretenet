@@ -38,7 +38,7 @@ jobs:
         run: |
           breton_cretenet_results
           breton_cretenet_results --help
-          pytest -sv --cov-report lcov term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+          pytest -sv --cov-report=lcov term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
 
       - name: Send to coveralls
         uses: coverallsapp/github-action@v2
