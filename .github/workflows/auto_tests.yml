@@ -41,7 +41,7 @@ jobs:
           pytest -sv --cov-report=lcov:coverage/lcov.info -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
 
       - name: Send to coveralls
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
