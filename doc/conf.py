@@ -23,7 +23,7 @@ copyright = "2023, Quentin Cretenet et Gaetan Breton"
 author = "Quentin Cretenet et Gaetan Breton"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0.0"
+release = "2.0.0"
 
 
 # -- General configuration ---------------------------------------------------
