@@ -26,3 +26,7 @@ Mini project of reproducible science
 |
 | For more information, see the documentation via the relevent badge or :
 | https://skyman29.github.io/M05_BretonCretenet/
+|
+| You can find information about the coverage on the relevent badge and if you want to check it yourself, you can run :
+| ``pytest -sv --cov-report=term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py`` if you want the light version of the tests.
+| ``pytest -sv --cov-report=term-missing --cov=breton_cretenet breton_cretenet/test.py`` if you want all the possible combinatins to be tested.
