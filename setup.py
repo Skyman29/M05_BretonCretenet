@@ -8,7 +8,7 @@ def load_requirements(f):
 
 setup(
     name="breton_cretenet",
-    version="1.0.0",
+    version="2.0.0",
     description="Mini-project for the M05 course.",
     url="https://github.com/Cretenet/tests-m05/tree/dev",
     license="MIT",

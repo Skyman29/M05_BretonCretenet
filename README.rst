@@ -1,3 +1,5 @@
+.. image:: https://coveralls.io/repos/github/Skyman29/M05_BretonCretenet/badge.svg?branch=feature-report-to-coveralls
+   :target: https://coveralls.io/github/Skyman29/M05_BretonCretenet?branch=feature-report-to-coveralls
 .. image:: https://img.shields.io/badge/docs-latest-orange.svg
    :target: https://skyman29.github.io/M05_BretonCretenet/
 .. image:: https://img.shields.io/badge/github-project-0000c0.svg
@@ -26,3 +28,7 @@ Mini project of reproducible science
 |
 | For more information, see the documentation via the relevent badge or :
 | https://skyman29.github.io/M05_BretonCretenet/
+|
+| You can find information about the coverage on the relevent badge and if you want to check it yourself, you can run :
+| ``pytest -sv --cov-report=term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py`` if you want the light version of the tests.
+| ``pytest -sv --cov-report=term-missing --cov=breton_cretenet breton_cretenet/test.py`` if you want all the possible combinatins to be tested.

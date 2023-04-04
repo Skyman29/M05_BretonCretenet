@@ -33,9 +33,17 @@ jobs:
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
         run: |
           breton_cretenet_results
-          pytest -sv --cov-report term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+          breton_cretenet_results --help
+          pytest -sv --cov-report=lcov:coverage/lcov.info -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+
+      - name: Send to coveralls
+        uses: coverallsapp/github-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0
@@ -81,9 +89,17 @@ jobs:
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
         run: |
           breton_cretenet_results
-          pytest -sv --cov-report term-missing --cov=breton_cretenet breton_cretenet/test.py
+          breton_cretenet_results --help
+          pytest -sv --cov-report=lcov:coverage/lcov.info --cov=breton_cretenet breton_cretenet/test.py
+
+      - name: Send to coveralls
+        uses: coverallsapp/github-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0

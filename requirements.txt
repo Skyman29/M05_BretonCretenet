@@ -10,3 +10,4 @@ sphinx-rtd-theme
 pytest
 pytest-cov
 tabulate
+coveralls
