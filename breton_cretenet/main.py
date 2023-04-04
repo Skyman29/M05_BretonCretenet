@@ -241,8 +241,8 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         df["random_state"] = rs
         # Append the modified dataframe to the list
         dfs.append(df)
-    # Concatenate the dataframes along the rows and create a multi-column index based on the model and random_state columns
 
+    # Concatenate the dataframes along the rows and create a multi-column index based on the model and random_state columns
     df_columns = dfs[2].columns.to_list()
     df_columns.remove("random_state")
     result = pd.concat(
@@ -250,9 +250,12 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         keys=[(model, rs) for model in df_columns for rs in random_state_list],
         axis=0,
     )
+    # Re-arrange column order
     result = result[["random_state"] + df_columns]
 
+    # Make index shorter
     result.index = result.index.map(lambda idx: idx[2])
+    # Print fancy table
     print(
         "Result of the machine learning model(s), Mean absolute error:\n",
         tabulate(result, headers="keys", tablefmt="fancy_grid", numalign="center"),
