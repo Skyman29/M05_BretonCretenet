@@ -230,6 +230,9 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
     print(
         "Result of the machine learning model(s), Mean absolute error:\n",
         tabulate(df_print_total, tablefmt="fancy_grid"),)
+    print(
+        "Result of the machine learning model(s), Mean absolute error:\n",
+        tabulate(df_print_total.T, tablefmt="fancy_grid"),)
     
 
 

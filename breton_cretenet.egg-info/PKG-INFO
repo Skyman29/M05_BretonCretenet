@@ -1,0 +1,26 @@
+Metadata-Version: 2.1
+Name: breton-cretenet
+Version: 1.0.0
+Summary: Mini-project for the M05 course.
+Home-page: https://github.com/Cretenet/tests-m05/tree/dev
+Author: Quentin Cretenet et Gaetan Breton
+Author-email: qcretenet@hotmail.com
+License: MIT
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+
+====================================
+Mini project of reproducible science
+====================================
+
+This project is a simple toy project. Its only purpose is to explore
+the most important concepts of reproducible science and apply them.
+
+To install the conda environment, type :
+blabla

@@ -1,0 +1,2 @@
+[console_scripts]
+breton_cretenet_results = breton_cretenet.main:main
