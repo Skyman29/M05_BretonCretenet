@@ -33,8 +33,11 @@ jobs:
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
         run: |
           breton_cretenet_results
+          breton_cretenet_results --help
           pytest -sv --cov-report term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
 
       - name: Pre-commit
@@ -81,9 +84,13 @@ jobs:
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
         run: |
           breton_cretenet_results
+          breton_cretenet_results --help
           pytest -sv --cov-report term-missing --cov=breton_cretenet breton_cretenet/test.py
+          coveralls --service=github
 
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0
@@ -118,3 +125,16 @@ jobs:
         with:
           password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
           repository_url: https://test.pypi.org/legacy/
+
+  coveralls:
+    name: Indicate completion to coveralls.io
+    needs: test
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Finished
+      run: |
+        pip3 install --upgrade coveralls
+        coveralls --service=github --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
