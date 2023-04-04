@@ -38,7 +38,10 @@ jobs:
         run: |
           breton_cretenet_results
           breton_cretenet_results --help
-          pytest -sv --cov-report term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+          pytest -sv --cov-report lcov term-missing -m "not pull_request" --cov=breton_cretenet breton_cretenet/test.py
+
+      - name: Send to coveralls
+        uses: coverallsapp/github-action@v2
 
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0
@@ -125,29 +128,3 @@ jobs:
         with:
           password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
           repository_url: https://test.pypi.org/legacy/
-
-  coveralls_pull:
-    name: Indicate completion to coveralls.io
-    needs: pull_request_ci
-    runs-on: ubuntu-latest
-    container: python:3-slim
-    steps:
-    - name: Finished
-      run: |
-        pip3 install --upgrade coveralls
-        coveralls --service=github --finish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  coveralls_push:
-    name: Indicate completion to coveralls.io
-    needs: normal_ci
-    runs-on: ubuntu-latest
-    container: python:3-slim
-    steps:
-    - name: Finished
-      run: |
-        pip3 install --upgrade coveralls
-        coveralls --service=github --finish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
