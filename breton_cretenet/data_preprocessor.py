@@ -19,6 +19,8 @@ def preprocess(X_train, X_test, method="standardize", verbose=1):
         Array containing the features of the test set.
     method : string, optional
         Selects the preprocessing method we want to apply, if None selected, then "standardize" is chosen by default.
+    verbose : int, optional
+        Verbosity level of information, by default 1.
 
     Returns
     -------
@@ -59,12 +61,12 @@ def preprocess_polynomialfeatures(data, data_column_names, degree=2, verbose=1):
     -----------
     data : numpy.ndarray
         The input array of data to be expanded.
-
     data_column_names : list
         A list of the names of the columns in the input data array.
-
     degree : int, optional (default=2)
         The degree of the polynomial features to generate.
+    verbose : int, optional
+        Verbosity level of information, by default 1.
 
     Returns:
     --------

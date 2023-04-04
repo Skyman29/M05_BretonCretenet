@@ -351,6 +351,25 @@ def test_preprocessor_inexistant_method():
     ],
 )
 def test_load_data(input, expected_shape):
+    """
+    Test the `load_data` function of the `data_preparator` module using parameterized inputs.
+
+    Parameters:
+    ----------
+    input : str
+        The URL of the data file to load.
+    expected_shape : tuple of int
+        The expected shape of the NumPy array returned by the `load_data` function.
+
+    Raises:
+    ------
+    ValueError
+        If the `load_data` function is called with an invalid URL.
+
+    Returns:
+    -------
+    None
+    """
     data = data_preparator.load_data(input)
     assert isinstance(data, np.ndarray)
     assert data.shape == expected_shape
@@ -362,48 +381,76 @@ def test_load_data(input, expected_shape):
         )
 
 
-def test_get_data_column_names():
-    # Test a valid URL
-    url = "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names"
-    assert data_preparator.get_data_column_names(url) == [
-        "CRIM",
-        "ZN",
-        "INDUS",
-        "CHAS",
-        "NOX",
-        "RM",
-        "AGE",
-        "DIS",
-        "RAD",
-        "TAX",
-        "PTRATIO",
-        "B",
-        "LSTAT",
-        "MEDV",
-    ]
+@pytest.mark.parametrize(
+    "input_data, expected_output",
+    [
+        (
+            "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names",
+            [
+                "CRIM",
+                "ZN",
+                "INDUS",
+                "CHAS",
+                "NOX",
+                "RM",
+                "AGE",
+                "DIS",
+                "RAD",
+                "TAX",
+                "PTRATIO",
+                "B",
+                "LSTAT",
+                "MEDV",
+            ],
+        ),
+        (
+            "data/housing.names",
+            [
+                "CRIM",
+                "ZN",
+                "INDUS",
+                "CHAS",
+                "NOX",
+                "RM",
+                "AGE",
+                "DIS",
+                "RAD",
+                "TAX",
+                "PTRATIO",
+                "B",
+                "LSTAT",
+                "MEDV",
+            ],
+        ),
+        ("data/nonexistent.csv", None),
+    ],
+)
+def test_get_data_column_names(input_data, expected_output):
+    """
+    Test the get_data_column_names function from the data_preparator module.
 
-    # Test a valid local file
-    file_path = "data/housing.names"
-    assert data_preparator.get_data_column_names(file_path) == [
-        "CRIM",
-        "ZN",
-        "INDUS",
-        "CHAS",
-        "NOX",
-        "RM",
-        "AGE",
-        "DIS",
-        "RAD",
-        "TAX",
-        "PTRATIO",
-        "B",
-        "LSTAT",
-        "MEDV",
-    ]
+    Parameters
+    ----------
+    input_data : str
+        The input data to pass to get_data_column_names. This can be a URL or a local file path.
+    expected_output : list or None
+        The expected output of get_data_column_names when called with input_data. If input_data is an invalid file path,
+        this should be None.
 
-    # Test a nonexistent file
-    with pytest.raises(ValueError):
-        data_preparator.get_data_column_names("data/nonexistent.csv")
+    Raises
+    ------
+    ValueError
+        If get_data_column_names is called with an invalid file path and expected_output is None.
+
+    Returns
+    -------
+    None
+    """
+    if expected_output is None:
+        with pytest.raises(ValueError):
+            data_preparator.get_data_column_names(input_data)
+    else:
+        assert data_preparator.get_data_column_names(input_data) == expected_output
 
 
 @pytest.mark.pull_request
@@ -423,6 +470,37 @@ def test_main_pull_request(
     algorithm,
     max_depth,
 ):
+    """
+    Test function for the main method in the codebase.
+
+    Parameters
+    ----------
+    dataset : str
+        Name of the dataset to use for testing.
+    random_state : int
+        Seed value for the random number generator.
+    degree : int
+        Degree of the polynomial features to generate.
+    preprocessing : str
+        Type of preprocessing to apply to the data.
+    feature_selection : bool
+        Whether or not to perform feature selection.
+    algorithm : str
+        Type of algorithm to use for testing.
+    max_depth : int
+        Maximum depth of the decision tree for testing.
+
+    Returns
+    -------
+    None
+        This function does not return anything.
+
+    Raises
+    ------
+    AssertionError
+        If the test fails.
+    """
+
     args = [
         "-d",
         dataset,
@@ -446,6 +524,24 @@ def test_main_pull_request(
 
 @pytest.mark.parametrize("dataset", ["housing", "red+white"])
 def test_main(dataset):
+    """
+    Test function for the main method in the codebase.
+
+    Parameters
+    ----------
+    dataset : str
+        Name of the dataset to use for testing.
+
+    Returns
+    -------
+    None
+        This function does not return anything.
+
+    Raises
+    ------
+    AssertionError
+        If the test fails.
+    """
     args = [
         "-d",
         dataset,

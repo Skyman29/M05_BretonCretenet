@@ -49,6 +49,8 @@ def load_data(input, verbose=1):
     ----------
     input : str
         The path to the input file. Can be a local file path or a URL.
+    verbose : int, optional
+        Verbosity level of information, by default 1.
 
     Returns
     -------
@@ -122,10 +124,12 @@ def detect_column_names_from_file(file):
     """
     Given a file, this function reads the file line by line and detects the column names in it.
 
-    Args:
+    Parameters
+    ----------
     - file: a file object, representing the file to be read.
 
-    Returns:
+    Returns
+    -------
     - column_names: a list of strings, containing the column names detected in the file.
     """
 
