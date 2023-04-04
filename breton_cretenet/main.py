@@ -231,16 +231,31 @@ def main(  # noqa: C901 A lot of if statement due to verbose raise a complexity 
         # Output
 
         df_dict[f"df_{random_state}"] = pd.DataFrame(models)
-    df_print_total = pd.concat(
-        df_dict.values(), keys=[f"RS:{rs}" for rs in random_state_list]
+
+    # Concatenate the dataframes and create a multi-column index
+    dfs = []
+    for key, df in df_dict.items():
+        # Extract the random_state from the key
+        rs = int(key.split("_")[1])
+        # Add a column with the random_state to the dataframe
+        df["random_state"] = rs
+        # Append the modified dataframe to the list
+        dfs.append(df)
+    # Concatenate the dataframes along the rows and create a multi-column index based on the model and random_state columns
+
+    df_columns = dfs[2].columns.to_list()
+    df_columns.remove("random_state")
+    result = pd.concat(
+        dfs,
+        keys=[(model, rs) for model in df_columns for rs in random_state_list],
+        axis=0,
     )
+    result = result[["random_state"] + df_columns]
+
+    result.index = result.index.map(lambda idx: idx[2])
     print(
         "Result of the machine learning model(s), Mean absolute error:\n",
-        tabulate(df_print_total, tablefmt="fancy_grid"),
-    )
-    print(
-        "Result of the machine learning model(s), Mean absolute error:\n",
-        tabulate(df_print_total.T, tablefmt="fancy_grid"),
+        tabulate(result, headers="keys", tablefmt="fancy_grid", numalign="center"),
     )
 
 
