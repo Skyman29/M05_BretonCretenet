@@ -11,11 +11,11 @@ Welcome to breton_cretenet's documentation!
    :caption: Contents:
 
    modules
-   
+
 Main results
 ============
-In the table bellow, you can find the test and training score (Mean Absolute Error) of our linear regression model. 
-The task was to predict the price of a house based on several features. We do not provide more information about the dataset since this is a well-known dataset that we use for a toy project.  
+In the table bellow, you can find the test and training score (Mean Absolute Error) of our linear regression model.
+The task was to predict the price of a house based on several features. We do not provide more information about the dataset since this is a well-known dataset that we use for a toy project.
 To use other models or perform other types of tasks on other datasets, please type ``breton_cretenet_results --help``.
 As you can see in the table, each model is trained and tested with 3 different random states.
 
