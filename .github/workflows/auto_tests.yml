@@ -55,12 +55,29 @@ jobs:
           sphinx-build doc doc/_build
           touch doc/_build/.nojekyll
 
+      - name: Deploy documentation to GitHub Pages
+        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: doc/_build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build PyPI (source) package
         # builds only from one variant
         if: ${{ matrix.python-version == '3.10' }}
         shell: bash -l {0}
         run: |
           python setup.py sdist
+
+      - name: Deploy package to TestPyPI
+        # deploys only one variant, and if it is tagged
+        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
+          repository_url: https://test.pypi.org/legacy/
 
   pull_request_ci:
     if: ${{ github.event_name == 'pull_request' }}
@@ -111,26 +128,9 @@ jobs:
           sphinx-build doc doc/_build
           touch doc/_build/.nojekyll
 
-      - name: Deploy documentation to GitHub Pages
-        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
-        uses: crazy-max/ghaction-github-pages@v3
-        with:
-          target_branch: gh-pages
-          build_dir: doc/_build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build PyPI (source) package
         # builds only from one variant
         if: ${{ matrix.python-version == '3.10' }}
         shell: bash -l {0}
         run: |
           python setup.py sdist
-
-      - name: Deploy package to TestPyPI
-        # deploys only one variant, and if it is tagged
-        if: ${{ matrix.python-version == '3.10' && startsWith(github.ref, 'refs/tags') }}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: pypi-AgENdGVzdC5weXBpLm9yZwIkM2ZmZDBmOTgtZTY2Yy00OTI3LTliMWEtYmI0YTQ5ODFjMWI3AAIqWzMsImI2MjU3ZGViLTAzOWMtNDNlMy05MzI5LWUwZDk1NTIwNmQ2OSJdAAAGIKLfrATrPgUx8J5klbyjZCjXnPo_o1S7WjzlsDshgNxK
-          repository_url: https://test.pypi.org/legacy/
