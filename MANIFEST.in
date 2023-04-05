@@ -1,0 +1,3 @@
+include LICENSE.txt README.rst requirements.txt
+recursive-include doc conf.py *.rst *.ico *.png
+recursive-include data *
