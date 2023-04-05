@@ -1,5 +1,5 @@
-.. image:: https://coveralls.io/repos/github/Skyman29/M05_BretonCretenet/badge.svg?branch=feature-report-to-coveralls
-   :target: https://coveralls.io/github/Skyman29/M05_BretonCretenet?branch=feature-report-to-coveralls
+.. image:: https://coveralls.io/repos/github/Skyman29/M05_BretonCretenet/badge.svg?branch=main
+   :target: https://coveralls.io/github/Skyman29/M05_BretonCretenet?branch=main
 .. image:: https://img.shields.io/badge/docs-latest-orange.svg
    :target: https://skyman29.github.io/M05_BretonCretenet/
 .. image:: https://img.shields.io/badge/github-project-0000c0.svg
