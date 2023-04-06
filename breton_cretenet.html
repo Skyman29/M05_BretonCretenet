@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>breton_cretenet package &mdash; breton_cretenet 2.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="M05_BretonCretenet" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            breton_cretenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">M05_BretonCretenet</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">breton_cretenet package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet.algorithm">breton_cretenet.algorithm module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.algorithm.decision_tree_regressor_algorithm"><code class="docutils literal notranslate"><span class="pre">decision_tree_regressor_algorithm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.algorithm.lasso_regression_feature_selection"><code class="docutils literal notranslate"><span class="pre">lasso_regression_feature_selection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.algorithm.linear_regression_algorithm"><code class="docutils literal notranslate"><span class="pre">linear_regression_algorithm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.algorithm.predict_from_regressor"><code class="docutils literal notranslate"><span class="pre">predict_from_regressor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.algorithm.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet.data_preparator">breton_cretenet.data_preparator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preparator.detect_column_names_from_file"><code class="docutils literal notranslate"><span class="pre">detect_column_names_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preparator.get_data_column_names"><code class="docutils literal notranslate"><span class="pre">get_data_column_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preparator.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preparator.prepare"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet.data_preprocessor">breton_cretenet.data_preprocessor module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preprocessor.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.data_preprocessor.preprocess_polynomialfeatures"><code class="docutils literal notranslate"><span class="pre">preprocess_polynomialfeatures()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet.main">breton_cretenet.main module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.main.get_args"><code class="docutils literal notranslate"><span class="pre">get_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet.test">breton_cretenet.test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.rand_data"><code class="docutils literal notranslate"><span class="pre">rand_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_decision_tree_regressor_algorithm"><code class="docutils literal notranslate"><span class="pre">test_decision_tree_regressor_algorithm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_get_data_column_names"><code class="docutils literal notranslate"><span class="pre">test_get_data_column_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_lasso_regression_feature_selection"><code class="docutils literal notranslate"><span class="pre">test_lasso_regression_feature_selection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_linear_regression_algorithm"><code class="docutils literal notranslate"><span class="pre">test_linear_regression_algorithm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_load_data"><code class="docutils literal notranslate"><span class="pre">test_load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_main"><code class="docutils literal notranslate"><span class="pre">test_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_main_pull_request"><code class="docutils literal notranslate"><span class="pre">test_main_pull_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_predict_from_regressor"><code class="docutils literal notranslate"><span class="pre">test_predict_from_regressor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preparator_is_random_if_no_seed"><code class="docutils literal notranslate"><span class="pre">test_preparator_is_random_if_no_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preparator_with_seed"><code class="docutils literal notranslate"><span class="pre">test_preparator_with_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preparator_xy_alignement"><code class="docutils literal notranslate"><span class="pre">test_preparator_xy_alignement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preprocessor_inexistant_method"><code class="docutils literal notranslate"><span class="pre">test_preprocessor_inexistant_method()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preprocessor_minmax"><code class="docutils literal notranslate"><span class="pre">test_preprocessor_minmax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preprocessor_polynomial"><code class="docutils literal notranslate"><span class="pre">test_preprocessor_polynomial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preprocessor_robust"><code class="docutils literal notranslate"><span class="pre">test_preprocessor_robust()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#breton_cretenet.test.test_preprocessor_standard"><code class="docutils literal notranslate"><span class="pre">test_preprocessor_standard()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-breton_cretenet">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">breton_cretenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">M05_BretonCretenet</a></li>
+      <li class="breadcrumb-item active">breton_cretenet package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/breton_cretenet.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="breton-cretenet-package">
+<h1>breton_cretenet package<a class="headerlink" href="#breton-cretenet-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-breton_cretenet.algorithm">
+<span id="breton-cretenet-algorithm-module"></span><h2>breton_cretenet.algorithm module<a class="headerlink" href="#module-breton_cretenet.algorithm" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.algorithm.decision_tree_regressor_algorithm">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.algorithm.</span></span><span class="sig-name descname"><span class="pre">decision_tree_regressor_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/algorithm.html#decision_tree_regressor_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.algorithm.decision_tree_regressor_algorithm" title="Permalink to this definition"></a></dt>
+<dd><p>Fit a decision tree regression model to the training data.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Training input data of shape (n_samples, n_features).</p>
+</dd>
+<dt>y_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Target values of shape (n_samples,).</p>
+</dd>
+<dt>X_train_labels<span class="classifier">list</span></dt><dd><p>List of strings representing the feature names.</p>
+</dd>
+<dt>max_depth<span class="classifier">int, optional (default=2)</span></dt><dd><p>The maximum depth of the decision tree.</p>
+</dd>
+<dt>random_state<span class="classifier">int, optional (default=0)</span></dt><dd><p>Seed used by the random number generator.</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>sklearn.tree.DecisionTreeRegressor</dt><dd><p>A fitted decision tree regression model.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.algorithm.lasso_regression_feature_selection">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.algorithm.</span></span><span class="sig-name descname"><span class="pre">lasso_regression_feature_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/algorithm.html#lasso_regression_feature_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.algorithm.lasso_regression_feature_selection" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Lasso regression feature selection to the training data.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Training input data of shape (n_samples, n_features).</p>
+</dd>
+<dt>y_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Target values of shape (n_samples,).</p>
+</dd>
+<dt>X_train_labels<span class="classifier">list</span></dt><dd><p>List of strings representing the feature names.</p>
+</dd>
+<dt>X_test<span class="classifier">numpy.ndarray</span></dt><dd><p>Training input data of shape (n_samples, n_features).</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing the selected training input data of shape (n_samples, n_selected_features)
+and a list of strings representing the names of the selected features.
+If the number of training samples is less than or equal to 50, the function returns
+the original input data and feature names unchanged.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.algorithm.linear_regression_algorithm">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.algorithm.</span></span><span class="sig-name descname"><span class="pre">linear_regression_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_train_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/algorithm.html#linear_regression_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.algorithm.linear_regression_algorithm" title="Permalink to this definition"></a></dt>
+<dd><p>Fit a linear regression model to the training data.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Training input data of shape (n_samples, n_features).</p>
+</dd>
+<dt>y_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Target values of shape (n_samples,).</p>
+</dd>
+<dt>X_train_labels<span class="classifier">list</span></dt><dd><p>List of strings representing the feature names.</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>sklearn.linear_model.LinearRegression</dt><dd><p>A fitted linear regression model.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.algorithm.predict_from_regressor">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.algorithm.</span></span><span class="sig-name descname"><span class="pre">predict_from_regressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/algorithm.html#predict_from_regressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.algorithm.predict_from_regressor" title="Permalink to this definition"></a></dt>
+<dd><p>Predict the target values for new input data using a given regression model.</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>model<span class="classifier">sklearn estimator</span></dt><dd><p>A fitted regression model.</p>
+</dd>
+<dt>X<span class="classifier">numpy.ndarray</span></dt><dd><p>Input data of shape (n_samples, n_features).</p>
+</dd>
+<dt>X_labels<span class="classifier">list</span></dt><dd><p>List of strings representing the feature names.</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>Predicted target values of shape (n_samples,).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.algorithm.score">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.algorithm.</span></span><span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_predict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/algorithm.html#score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.algorithm.score" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the mean absolute error (MAE) between true and predicted values.</p>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>y_true<span class="classifier">np.ndarray</span></dt><dd><p>Correct target values.</p>
+</dd>
+<dt>y_predict<span class="classifier">np.ndarray</span></dt><dd><p>Estimated target values.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>float</dt><dd><p>Mean absolute error between <cite>y_true</cite> and <cite>y_predict</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_predict</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_predict</span><span class="p">)</span>
+<span class="go">0.5</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-breton_cretenet.data_preparator">
+<span id="breton-cretenet-data-preparator-module"></span><h2>breton_cretenet.data_preparator module<a class="headerlink" href="#module-breton_cretenet.data_preparator" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preparator.detect_column_names_from_file">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preparator.</span></span><span class="sig-name descname"><span class="pre">detect_column_names_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preparator.html#detect_column_names_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preparator.detect_column_names_from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Given a file, this function reads the file line by line and detects the column names in it.</p>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>file: a file object, representing the file to be read.</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>column_names: a list of strings, containing the column names detected in the file.</p></li>
+</ul>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preparator.get_data_column_names">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preparator.</span></span><span class="sig-name descname"><span class="pre">get_data_column_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preparator.html#get_data_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preparator.get_data_column_names" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the names of columns in a data file.</p>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input<span class="classifier">str</span></dt><dd><p>A URL or local path to a data file.</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>list</dt><dd><p>A list of column names.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h3>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the file does not exist.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h3>
+<p>This function detects the type of data file by checking its extension and
+assumes that the file is either a CSV or a text file with space-separated
+values. It then reads the file and returns the column names.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preparator.load_data">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preparator.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preparator.html#load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preparator.load_data" title="Permalink to this definition"></a></dt>
+<dd><p>Load data from a CSV or fixed-width file into a NumPy array.</p>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input<span class="classifier">str</span></dt><dd><p>The path to the input file. Can be a local file path or a URL.</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>A 2-dimensional NumPy array containing the loaded data.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h3>Raises<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the input file format is not recognized.</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h3>Notes<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h3>
+<p>This function reads data from CSV or fixed-width files using the pandas library,
+and converts it to a NumPy array. The file format is determined based on the file
+extension: “.csv” files are assumed to be comma-separated, while “.data” files are
+assumed to be fixed-width. The header of the file is ignored.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preparator.prepare">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preparator.</span></span><span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preparator.html#prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preparator.prepare" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a training and a test set from the features X and labels y in dataset.</p>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">numpy.ndarray</span></dt><dd><p>Dataset of shape (n_samples, n_features), with labels in the last columns and features in the other columns.</p>
+</dd>
+<dt>random_state<span class="classifier">int, optional</span></dt><dd><p>Seed chosen for the train test split. If no argument is given, the seed is not fixed.</p>
+</dd>
+<dt>stratify<span class="classifier">list, optional</span></dt><dd><p>If not None, the dataset is split in a stratified fashion, using this as the class labels.</p>
+</dd>
+</dl>
+</section>
+<section id="id18">
+<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>X_train, an array containing the features of the training set.</p>
+</dd>
+<dt>numpy.ndarray</dt><dd><p>X_test, an array containing the features of the test set.</p>
+</dd>
+<dt>numpy.ndarray</dt><dd><p>y_train, an array containing the labels of the training set.</p>
+</dd>
+<dt>numpy.ndarray</dt><dd><p>y_test, an array containing the labels of the test set.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-breton_cretenet.data_preprocessor">
+<span id="breton-cretenet-data-preprocessor-module"></span><h2>breton_cretenet.data_preprocessor module<a class="headerlink" href="#module-breton_cretenet.data_preprocessor" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preprocessor.preprocess">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preprocessor.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'standardize'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preprocessor.html#preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preprocessor.preprocess" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a training and a test set from the features X and labels y in dataset.</p>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X_train<span class="classifier">numpy.ndarray</span></dt><dd><p>Array containing the features of the training set.</p>
+</dd>
+<dt>X_test<span class="classifier">numpy.ndarray</span></dt><dd><p>Array containing the features of the test set.</p>
+</dd>
+<dt>method<span class="classifier">string, optional</span></dt><dd><p>Selects the preprocessing method we want to apply, if None selected, then “standardize” is chosen by default.</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array containing the preprocessed features of the training set.</p>
+</dd>
+<dt>numpy.ndarray</dt><dd><p>An array containing the preprocessed features of the test set.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.data_preprocessor.preprocess_polynomialfeatures">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.data_preprocessor.</span></span><span class="sig-name descname"><span class="pre">preprocess_polynomialfeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/data_preprocessor.html#preprocess_polynomialfeatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.data_preprocessor.preprocess_polynomialfeatures" title="Permalink to this definition"></a></dt>
+<dd><p>Applies polynomial feature expansion to a Numpy array of data, and returns the resulting array and the names of the
+columns in the expanded feature matrix.</p>
+<section id="id21">
+<h3>Parameters:<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>data<span class="classifier">numpy.ndarray</span></dt><dd><p>The input array of data to be expanded.</p>
+</dd>
+<dt>data_column_names<span class="classifier">list</span></dt><dd><p>A list of the names of the columns in the input data array.</p>
+</dd>
+<dt>degree<span class="classifier">int, optional (default=2)</span></dt><dd><p>The degree of the polynomial features to generate.</p>
+</dd>
+<dt>verbose<span class="classifier">int, optional</span></dt><dd><p>Verbosity level of information, by default 1.</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h3>Returns:<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>tuple<span class="classifier">(numpy.ndarray, list)</span></dt><dd><dl class="simple">
+<dt>A tuple containing two elements:</dt><dd><ol class="arabic simple">
+<li><p>A Numpy array representing the expanded feature matrix.</p></li>
+<li><p>A list of the names of the columns in the expanded feature matrix.</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-breton_cretenet.main">
+<span id="breton-cretenet-main-module"></span><h2>breton_cretenet.main module<a class="headerlink" href="#module-breton_cretenet.main" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.main.get_args">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.main.</span></span><span class="sig-name descname"><span class="pre">get_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/main.html#get_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.main.get_args" title="Permalink to this definition"></a></dt>
+<dd><p>Parse command-line arguments.
+Parameters
+———-
+args : list, optional</p>
+<blockquote>
+<div><p>List of command-line arguments to parse. The default is None.</p>
+</div></blockquote>
+<section id="id23">
+<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>args<span class="classifier">argparse.Namespace</span></dt><dd><p>Parsed arguments.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.main.main">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.main.main" title="Permalink to this definition"></a></dt>
+<dd><p>The function executes a machine learning workflow on a given dataset, performs feature engineering, feature selection, model training, and model evaluation.</p>
+<section id="id24">
+<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>args_test<span class="classifier">list, optional</span></dt><dd><p>List of arguments for testing the package. Default is None.</p>
+</dd>
+</dl>
+</section>
+<section id="id25">
+<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id26">
+<h3>Notes<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h3>
+<p>This function performs the following steps:
+1. Loads the dataset and concatenates multiple datasets if applicable.
+2. Splits the dataset into training and testing sets.
+3. Performs polynomial feature engineering on the dataset.
+4. Scales the dataset.
+5. Performs feature selection on the dataset. Optional
+6. Trains the model(s) on the training set and evaluates the performance on the testing set.
+7. Concatenates the results and outputs them in a formatted table.</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-breton_cretenet.test">
+<span id="breton-cretenet-test-module"></span><h2>breton_cretenet.test module<a class="headerlink" href="#module-breton_cretenet.test" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.rand_data">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">rand_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#rand_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.rand_data" title="Permalink to this definition"></a></dt>
+<dd><p>A function that returns a random dataset for the tests.</p>
+<section id="id27">
+<h3>Parameters:<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id28">
+<h3>Returns:<a class="headerlink" href="#id28" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array of size (10, 6) with random features and labels</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_decision_tree_regressor_algorithm">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_decision_tree_regressor_algorithm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_decision_tree_regressor_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_decision_tree_regressor_algorithm" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the decision_tree_regressor_algorithm function returns an instance of the DecisionTreeRegressor
+class.</p>
+<section id="id29">
+<h3>Parameters:<a class="headerlink" href="#id29" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id30">
+<h3>Returns:<a class="headerlink" href="#id30" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_get_data_column_names">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_get_data_column_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_get_data_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_get_data_column_names" title="Permalink to this definition"></a></dt>
+<dd><p>Test the get_data_column_names function from the data_preparator module.</p>
+<section id="id31">
+<h3>Parameters<a class="headerlink" href="#id31" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input_data<span class="classifier">str</span></dt><dd><p>The input data to pass to get_data_column_names. This can be a URL or a local file path.</p>
+</dd>
+<dt>expected_output<span class="classifier">list or None</span></dt><dd><p>The expected output of get_data_column_names when called with input_data. If input_data is an invalid file path,
+this should be None.</p>
+</dd>
+</dl>
+</section>
+<section id="id32">
+<h3>Raises<a class="headerlink" href="#id32" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If get_data_column_names is called with an invalid file path and expected_output is None.</p>
+</dd>
+</dl>
+</section>
+<section id="id33">
+<h3>Returns<a class="headerlink" href="#id33" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_lasso_regression_feature_selection">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_lasso_regression_feature_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_lasso_regression_feature_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_lasso_regression_feature_selection" title="Permalink to this definition"></a></dt>
+<dd><p>Test the <cite>lasso_regression_feature_selection</cite> function.</p>
+<section id="id34">
+<h3>Parameters<a class="headerlink" href="#id34" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id35">
+<h3>Returns<a class="headerlink" href="#id35" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_linear_regression_algorithm">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_linear_regression_algorithm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_linear_regression_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_linear_regression_algorithm" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the linear_regression_algorithm function returns an instance of the LinearRegression
+class.</p>
+<section id="id36">
+<h3>Parameters:<a class="headerlink" href="#id36" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id37">
+<h3>Returns:<a class="headerlink" href="#id37" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_load_data">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_load_data" title="Permalink to this definition"></a></dt>
+<dd><p>Test the <cite>load_data</cite> function of the <cite>data_preparator</cite> module using parameterized inputs.</p>
+<section id="id38">
+<h3>Parameters:<a class="headerlink" href="#id38" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input<span class="classifier">str</span></dt><dd><p>The URL of the data file to load.</p>
+</dd>
+<dt>expected_shape<span class="classifier">tuple of int</span></dt><dd><p>The expected shape of the NumPy array returned by the <cite>load_data</cite> function.</p>
+</dd>
+</dl>
+</section>
+<section id="id39">
+<h3>Raises:<a class="headerlink" href="#id39" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the <cite>load_data</cite> function is called with an invalid URL.</p>
+</dd>
+</dl>
+</section>
+<section id="id40">
+<h3>Returns:<a class="headerlink" href="#id40" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_main">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_main" title="Permalink to this definition"></a></dt>
+<dd><p>Test function for the main method in the codebase.</p>
+<section id="id41">
+<h3>Parameters<a class="headerlink" href="#id41" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">str</span></dt><dd><p>Name of the dataset to use for testing.</p>
+</dd>
+</dl>
+</section>
+<section id="id42">
+<h3>Returns<a class="headerlink" href="#id42" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>None</dt><dd><p>This function does not return anything.</p>
+</dd>
+</dl>
+</section>
+<section id="id43">
+<h3>Raises<a class="headerlink" href="#id43" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>AssertionError</dt><dd><p>If the test fails.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_main_pull_request">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_main_pull_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_main_pull_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_main_pull_request" title="Permalink to this definition"></a></dt>
+<dd><p>Test function for the main method in the codebase.</p>
+<section id="id44">
+<h3>Parameters<a class="headerlink" href="#id44" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">str</span></dt><dd><p>Name of the dataset to use for testing.</p>
+</dd>
+<dt>random_state<span class="classifier">int</span></dt><dd><p>Seed value for the random number generator.</p>
+</dd>
+<dt>degree<span class="classifier">int</span></dt><dd><p>Degree of the polynomial features to generate.</p>
+</dd>
+<dt>preprocessing<span class="classifier">str</span></dt><dd><p>Type of preprocessing to apply to the data.</p>
+</dd>
+<dt>feature_selection<span class="classifier">bool</span></dt><dd><p>Whether or not to perform feature selection.</p>
+</dd>
+<dt>algorithm<span class="classifier">str</span></dt><dd><p>Type of algorithm to use for testing.</p>
+</dd>
+<dt>max_depth<span class="classifier">int</span></dt><dd><p>Maximum depth of the decision tree for testing.</p>
+</dd>
+</dl>
+</section>
+<section id="id45">
+<h3>Returns<a class="headerlink" href="#id45" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>None</dt><dd><p>This function does not return anything.</p>
+</dd>
+</dl>
+</section>
+<section id="id46">
+<h3>Raises<a class="headerlink" href="#id46" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>AssertionError</dt><dd><p>If the test fails.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_predict_from_regressor">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_predict_from_regressor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_predict_from_regressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_predict_from_regressor" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the predict_from_regressor function returns an array of predictions with the same
+length as the input array.</p>
+<section id="id47">
+<h3>Parameters:<a class="headerlink" href="#id47" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id48">
+<h3>Returns:<a class="headerlink" href="#id48" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preparator_is_random_if_no_seed">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preparator_is_random_if_no_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preparator_is_random_if_no_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preparator_is_random_if_no_seed" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the preparator returns random splits.</p>
+<section id="id49">
+<h3>Parameters:<a class="headerlink" href="#id49" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id50">
+<h3>Returns:<a class="headerlink" href="#id50" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preparator_with_seed">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preparator_with_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preparator_with_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preparator_with_seed" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the preparator gives fixed splits if the seed is set.</p>
+<section id="id51">
+<h3>Parameters:<a class="headerlink" href="#id51" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id52">
+<h3>Returns:<a class="headerlink" href="#id52" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preparator_xy_alignement">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preparator_xy_alignement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preparator_xy_alignement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preparator_xy_alignement" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the preparator keeps the features and the labels grouped correctly after the shuffling.</p>
+<section id="id53">
+<h3>Parameters:<a class="headerlink" href="#id53" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id54">
+<h3>Returns:<a class="headerlink" href="#id54" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preprocessor_inexistant_method">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preprocessor_inexistant_method</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preprocessor_inexistant_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preprocessor_inexistant_method" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the if no existing method is selected, then the standardization is applied.</p>
+<section id="id55">
+<h3>Parameters:<a class="headerlink" href="#id55" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id56">
+<h3>Returns:<a class="headerlink" href="#id56" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preprocessor_minmax">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preprocessor_minmax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preprocessor_minmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preprocessor_minmax" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the MinMax method of the preprocessor is correctly implemented.</p>
+<section id="id57">
+<h3>Parameters:<a class="headerlink" href="#id57" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id58">
+<h3>Returns:<a class="headerlink" href="#id58" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preprocessor_polynomial">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preprocessor_polynomial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preprocessor_polynomial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preprocessor_polynomial" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the Polynomial Features method of the preprocessor is correctly implemented.</p>
+<section id="id59">
+<h3>Parameters:<a class="headerlink" href="#id59" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id60">
+<h3>Returns:<a class="headerlink" href="#id60" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preprocessor_robust">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preprocessor_robust</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preprocessor_robust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preprocessor_robust" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the robust scaler method of the preprocessor is correctly implemented.</p>
+<section id="id61">
+<h3>Parameters:<a class="headerlink" href="#id61" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id62">
+<h3>Returns:<a class="headerlink" href="#id62" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="breton_cretenet.test.test_preprocessor_standard">
+<span class="sig-prename descclassname"><span class="pre">breton_cretenet.test.</span></span><span class="sig-name descname"><span class="pre">test_preprocessor_standard</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/breton_cretenet/test.html#test_preprocessor_standard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#breton_cretenet.test.test_preprocessor_standard" title="Permalink to this definition"></a></dt>
+<dd><p>Test function to ensure that the standard method of the preprocessor is correctly implemented.</p>
+<section id="id63">
+<h3>Parameters:<a class="headerlink" href="#id63" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id64">
+<h3>Returns:<a class="headerlink" href="#id64" title="Permalink to this heading"></a></h3>
+<p>None</p>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-breton_cretenet">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-breton_cretenet" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="M05_BretonCretenet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Quentin Cretenet et Gaetan Breton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
